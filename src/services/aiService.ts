@@ -40,7 +40,7 @@ export class AIService {
       this.modelName = config.model || 'gemini-2.0-flash';
       this.model = google(this.modelName);
     } else if (provider === 'claude') {
-      const apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY;
+      const apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY || (process.env as any).claude_api_key;
       if (!apiKey) {
         throw new Error('ANTHROPIC_API_KEY not set in environment');
       }
