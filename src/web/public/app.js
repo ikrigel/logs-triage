@@ -471,10 +471,15 @@ function showToast(message, type = 'info') {
 // API Key Management
 function toggleKeyVisibility(inputId) {
   const input = document.getElementById(inputId);
-  if (input.type === 'password') {
-    input.type = 'text';
-  } else {
-    input.type = 'password';
+  if (!input) {
+    console.error(`Input element not found: ${inputId}`);
+    return;
+  }
+
+  try {
+    input.type = input.type === 'password' ? 'text' : 'password';
+  } catch (e) {
+    console.error(`Error toggling visibility for ${inputId}:`, e);
   }
 }
 
@@ -492,7 +497,13 @@ function saveAPIKeys() {
   if (perplexityKey) sessionStorage.setItem('perplexity_api_key', perplexityKey);
   if (claudeKey) sessionStorage.setItem('claude_api_key', claudeKey);
 
-  showToast('API keys saved securely', 'success');
+  // Also save the current provider and model selection
+  const provider = document.getElementById('ai-provider')?.value || 'gemini';
+  const model = document.getElementById('ai-model')?.value || 'gemini-2.0-flash';
+  localStorage.setItem('ai_provider', provider);
+  localStorage.setItem('ai_model', model);
+
+  showToast('Settings saved! API keys & provider/model selected', 'success');
   loadSettings();
 }
 
