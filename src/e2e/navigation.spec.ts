@@ -105,32 +105,30 @@ test.describe('Dashboard Navigation', () => {
   });
 });
 
-test.describe('Mobile Navigation', () => {
-  test.use({ viewport: { width: 375, height: 667 } });
+test('Mobile Navigation: should be accessible on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
 
-  test('should be accessible on mobile', async ({ page }) => {
-    await page.goto('/');
+  // Navigation links should be visible
+  const navLinks = await page.locator('.nav-link').all();
+  expect(navLinks.length).toBeGreaterThan(0);
 
-    // Navigation links should be visible
-    const navLinks = await page.locator('.nav-link').all();
-    expect(navLinks.length).toBeGreaterThan(0);
+  // All links should be clickable
+  for (const link of navLinks) {
+    expect(await link.isVisible()).toBeTruthy();
+  }
+});
 
-    // All links should be clickable
-    for (const link of navLinks) {
-      expect(await link.isVisible()).toBeTruthy();
-    }
-  });
+test('Mobile Navigation: should have readable text on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
 
-  test('should have readable text on mobile', async ({ page }) => {
-    await page.goto('/');
-
-    const navLinks = await page.locator('.nav-link').all();
-    for (const link of navLinks) {
-      const fontSize = await link.evaluate((el) => window.getComputedStyle(el).fontSize);
-      const size = parseFloat(fontSize);
-      expect(size).toBeGreaterThanOrEqual(14); // Readable size
-    }
-  });
+  const navLinks = await page.locator('.nav-link').all();
+  for (const link of navLinks) {
+    const fontSize = await link.evaluate((el) => window.getComputedStyle(el).fontSize);
+    const size = parseFloat(fontSize);
+    expect(size).toBeGreaterThanOrEqual(14); // Readable size
+  }
 });
 
 test.describe('Keyboard Navigation', () => {

@@ -61,60 +61,58 @@ test.describe('UI Responsiveness Tests', () => {
   });
 });
 
-test.describe('Mobile Specific Tests', () => {
-  test.use({ ...devices['Pixel 5'] });
+// Mobile Specific Tests - Pixel 5
+test('Mobile: should have readable touch targets on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 851 });
+  await page.goto('/');
 
-  test('should have readable touch targets on mobile', async ({ page }) => {
-    await page.goto('/');
-
-    // Check button sizes (min 44x44 for touch)
-    const buttons = await page.locator('.btn').all();
-    for (const button of buttons) {
-      const box = await button.boundingBox();
-      if (box) {
-        expect(box.width).toBeGreaterThanOrEqual(44);
-        expect(box.height).toBeGreaterThanOrEqual(44);
-      }
+  // Check button sizes (min 44x44 for touch)
+  const buttons = await page.locator('.btn').all();
+  for (const button of buttons) {
+    const box = await button.boundingBox();
+    if (box) {
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
     }
-  });
-
-  test('should handle long text wrapping on mobile', async ({ page }) => {
-    await page.goto('/');
-
-    // Get viewport width
-    const viewportSize = page.viewportSize();
-    if (viewportSize) {
-      // Check no horizontal scrolling is needed
-      const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
-      expect(bodyWidth).toBeLessThanOrEqual(viewportSize.width + 10); // Small margin for borders
-    }
-  });
-
-  test('should have accessible form inputs on mobile', async ({ page }) => {
-    await page.goto('/?view=logs');
-    await page.waitForSelector('#logset-selector', { timeout: 5000 }).catch(() => {});
-
-    // Check inputs have proper font size (prevents auto-zoom on iOS)
-    const inputs = await page.locator('input, select, textarea').all();
-    for (const input of inputs) {
-      const fontSize = await input.evaluate((el) => window.getComputedStyle(el).fontSize);
-      const size = parseFloat(fontSize);
-      expect(size).toBeGreaterThanOrEqual(16); // iOS requires 16px+ to prevent zoom
-    }
-  });
+  }
 });
 
-test.describe('Tablet Specific Tests', () => {
-  test.use({ ...devices['iPad Pro'] });
+test('Mobile: should handle long text wrapping on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 851 });
+  await page.goto('/');
 
-  test('should optimize layout for tablet', async ({ page }) => {
-    await page.goto('/');
+  // Get viewport width
+  const viewportSize = page.viewportSize();
+  if (viewportSize) {
+    // Check no horizontal scrolling is needed
+    const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
+    expect(bodyWidth).toBeLessThanOrEqual(viewportSize.width + 10); // Small margin for borders
+  }
+});
 
-    // Check grid layouts adapt
-    const grids = await page.locator('[class*="grid"]').all();
-    expect(grids.length).toBeGreaterThan(0);
+test('Mobile: should have accessible form inputs on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 851 });
+  await page.goto('/?view=logs');
+  await page.waitForSelector('#logset-selector', { timeout: 5000 }).catch(() => {});
 
-    // Take tablet view
-    await page.screenshot({ path: 'screenshot-tablet-layout.png' });
-  });
+  // Check inputs have proper font size (prevents auto-zoom on iOS)
+  const inputs = await page.locator('input, select, textarea').all();
+  for (const input of inputs) {
+    const fontSize = await input.evaluate((el) => window.getComputedStyle(el).fontSize);
+    const size = parseFloat(fontSize);
+    expect(size).toBeGreaterThanOrEqual(16); // iOS requires 16px+ to prevent zoom
+  }
+});
+
+// Tablet Specific Tests - iPad Pro
+test('Tablet: should optimize layout for tablet', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 1366 });
+  await page.goto('/');
+
+  // Check grid layouts adapt
+  const grids = await page.locator('[class*="grid"]').all();
+  expect(grids.length).toBeGreaterThan(0);
+
+  // Take tablet view
+  await page.screenshot({ path: 'screenshot-tablet-layout.png' });
 });

@@ -110,45 +110,43 @@ test.describe('Settings View', () => {
   });
 });
 
-test.describe('Settings on Mobile', () => {
-  test.use({ viewport: { width: 375, height: 667 } });
+test('Mobile Settings: should be responsive on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  await page.click('[data-view="settings"]');
 
-  test('should be responsive on mobile', async ({ page }) => {
-    await page.goto('/');
-    await page.click('[data-view="settings"]');
+  // Provider grid should stack on mobile
+  await page.waitForSelector('.provider-grid');
 
-    // Provider grid should stack on mobile
-    await page.waitForSelector('.provider-grid');
+  // Check cards are still clickable
+  const buttons = await page.locator('.provider-card button').all();
+  expect(buttons.length).toBeGreaterThan(0);
 
-    // Check cards are still clickable
-    const buttons = await page.locator('.provider-card button').all();
-    expect(buttons.length).toBeGreaterThan(0);
+  for (const button of buttons) {
+    expect(await button.isVisible()).toBeTruthy();
+  }
+});
 
-    for (const button of buttons) {
-      expect(await button.isVisible()).toBeTruthy();
+test('Mobile Settings: should show toast notifications on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  await page.click('[data-view="settings"]');
+
+  // Try to switch provider
+  const firstButton = await page.locator('.provider-card button').first();
+  if (firstButton) {
+    await firstButton.click();
+
+    // Wait for toast
+    const toast = page.locator('.toast');
+    await toast.waitFor({ timeout: 3000 }).catch(() => {});
+
+    // Toast should be visible and not overlap content
+    const toastBox = await toast.boundingBox();
+    const viewportSize = page.viewportSize();
+    if (toastBox && viewportSize) {
+      expect(toastBox.x + toastBox.width).toBeLessThanOrEqual(viewportSize.width);
+      expect(toastBox.y + toastBox.height).toBeLessThanOrEqual(viewportSize.height);
     }
-  });
-
-  test('should show toast notifications on mobile', async ({ page }) => {
-    await page.goto('/');
-    await page.click('[data-view="settings"]');
-
-    // Try to switch provider
-    const firstButton = await page.locator('.provider-card button').first();
-    if (firstButton) {
-      await firstButton.click();
-
-      // Wait for toast
-      const toast = page.locator('.toast');
-      await toast.waitFor({ timeout: 3000 }).catch(() => {});
-
-      // Toast should be visible and not overlap content
-      const toastBox = await toast.boundingBox();
-      const viewportSize = page.viewportSize();
-      if (toastBox && viewportSize) {
-        expect(toastBox.x + toastBox.width).toBeLessThanOrEqual(viewportSize.width);
-        expect(toastBox.y + toastBox.height).toBeLessThanOrEqual(viewportSize.height);
-      }
-    }
-  });
+  }
 });
