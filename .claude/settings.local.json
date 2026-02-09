@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 10 npx vitest:*)",
+      "Bash(timeout 15 npx vitest:*)"
+    ]
+  }
+}
