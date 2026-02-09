@@ -9,6 +9,7 @@ import { TicketStorage } from '../storage/tickets';
 import { TicketService } from '../services/ticketService';
 import { LogTriageAgent } from '../agent';
 import { filterLogs, filterTickets } from '../utils/filter';
+import { AIService, AIProvider } from '../services/aiService';
 
 dotenv.config();
 
@@ -98,7 +99,7 @@ app.post('/api/triage/run', async (req: Request, res: Response) => {
       return res.status(429).json({ error: 'Triage already running' });
     }
 
-    const { logSetNumber } = req.body;
+    const { logSetNumber, provider, model, apiKey } = req.body;
 
     if (!logSetNumber || logSetNumber < 1 || logSetNumber > 5) {
       return res.status(400).json({ error: 'Invalid log set number' });
@@ -112,7 +113,17 @@ app.post('/api/triage/run', async (req: Request, res: Response) => {
 
     await ticketStorage.initialize();
 
-    const agent = new LogTriageAgent(logSetNumber, lastFive, allLogs, changes, ticketStorage);
+    // Create AIService with provided configuration if available
+    let customAIService: AIService | undefined;
+    if (provider && apiKey) {
+      customAIService = new AIService({
+        provider: provider as AIProvider,
+        model: model || undefined,
+        apiKey: apiKey,
+      });
+    }
+
+    const agent = new LogTriageAgent(logSetNumber, lastFive, allLogs, changes, ticketStorage, customAIService);
 
     const result = await agent.run();
     const tickets = await ticketService.getAll();

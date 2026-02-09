@@ -1,8 +1,9 @@
 import { google } from '@ai-sdk/google';
+import { anthropic } from '@ai-sdk/anthropic';
 import { generateText, LanguageModel } from 'ai';
 import { toolDefinitions } from '../tools';
 
-export type AIProvider = 'gemini' | 'perplexity';
+export type AIProvider = 'gemini' | 'perplexity' | 'claude';
 
 interface AIServiceConfig {
   provider?: AIProvider;
@@ -13,9 +14,10 @@ interface AIServiceConfig {
 }
 
 export class AIService {
-  private model?: LanguageModel;
+  private model?: LanguageModel | any;
   private provider: AIProvider;
   private apiKey: string;
+  private modelName: string;
   private temperature: number;
   private maxTokens: number;
 
@@ -35,13 +37,24 @@ export class AIService {
       }
       process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
       this.apiKey = apiKey;
-      this.model = google('gemini-2.0-flash');
+      this.modelName = config.model || 'gemini-2.0-flash';
+      this.model = google(this.modelName);
+    } else if (provider === 'claude') {
+      const apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        throw new Error('ANTHROPIC_API_KEY not set in environment');
+      }
+      process.env.ANTHROPIC_API_KEY = apiKey;
+      this.apiKey = apiKey;
+      this.modelName = config.model || 'claude-opus';
+      this.model = anthropic(this.modelName);
     } else if (provider === 'perplexity') {
       const apiKey = config.apiKey || process.env.PERPLEXITY_API_KEY || (process.env as any).perplexity_api_key;
       if (!apiKey) {
         throw new Error('PERPLEXITY_API_KEY not set in environment');
       }
       this.apiKey = apiKey;
+      this.modelName = config.model || 'sonar';
     } else {
       throw new Error(`Unsupported AI provider: ${provider}`);
     }
@@ -58,6 +71,8 @@ export class AIService {
     try {
       if (this.provider === 'perplexity') {
         return await this.callPerplexity(systemPrompt, messages);
+      } else if (this.provider === 'claude') {
+        return await this.callClaude(systemPrompt, messages);
       } else {
         return await this.callGemini(systemPrompt, messages);
       }
@@ -70,6 +85,67 @@ export class AIService {
   }
 
   private async callGemini(
+    systemPrompt: string,
+    messages: Array<{ role: string; content: string }>
+  ): Promise<{
+    response: string;
+    toolCalls?: Array<{ toolName: string; arguments: Record<string, any> }>;
+    stop_reason?: string;
+  }> {
+    const toolsDescription = toolDefinitions
+      .map((tool) => {
+        const props = (tool.inputSchema as any)._def?.schema?.shape || {};
+        const propDescriptions = Object.entries(props)
+          .map(([key]) => `  - ${key}`)
+          .join('\n');
+        return `- ${tool.name}: ${tool.description}\n${propDescriptions}`;
+      })
+      .join('\n');
+
+    const enhancedSystem = `${systemPrompt}
+
+AVAILABLE TOOLS:
+${toolsDescription}
+
+When using tools, format your response with <TOOL_CALL> blocks like this:
+<TOOL_CALL>
+{
+  "toolName": "search_logs",
+  "arguments": { "keyword": "error" }
+}
+</TOOL_CALL>`;
+
+    const result = await generateText({
+      model: this.model!,
+      system: enhancedSystem,
+      messages: messages as any,
+      temperature: this.temperature,
+    });
+
+    // Parse tool calls from the response text
+    const toolCalls: Array<{ toolName: string; arguments: Record<string, any> }> = [];
+    const toolCallRegex = /<TOOL_CALL>\s*(\{[\s\S]*?\})\s*<\/TOOL_CALL>/g;
+    let match;
+
+    while ((match = toolCallRegex.exec(result.text)) !== null) {
+      try {
+        const toolCall = JSON.parse(match[1]);
+        if (toolCall.toolName && toolCall.arguments) {
+          toolCalls.push(toolCall);
+        }
+      } catch {
+        // Skip malformed tool calls
+      }
+    }
+
+    return {
+      response: result.text,
+      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      stop_reason: result.finishReason,
+    };
+  }
+
+  private async callClaude(
     systemPrompt: string,
     messages: Array<{ role: string; content: string }>
   ): Promise<{
@@ -156,7 +232,7 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'sonar',
+        model: this.modelName,
         messages: [
           { role: 'system', content: enhancedSystem },
           ...messages.map((m) => ({

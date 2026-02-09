@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDashboard();
   loadTickets();
   loadLogSet();
+  loadSettings();
   setupPagination();
 });
 
@@ -324,6 +325,16 @@ async function submitTicket(e) {
 
 async function runTriage() {
   const logSet = parseInt(document.getElementById('triage-logset').value);
+  const provider = localStorage.getItem('ai_provider') || 'gemini';
+  const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
+
+  // Get API key from sessionStorage
+  const apiKey = sessionStorage.getItem(`${provider}_api_key`);
+
+  if (!apiKey) {
+    showToast(`No API key found for ${provider}. Please add one in settings.`, 'error');
+    return;
+  }
 
   runTriageBtn.disabled = true;
   runTriageBtn.textContent = '⏳ Running...';
@@ -334,7 +345,12 @@ async function runTriage() {
     const response = await fetch('/api/triage/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ logSetNumber: logSet }),
+      body: JSON.stringify({
+        logSetNumber: logSet,
+        provider: provider,
+        model: model,
+        apiKey: apiKey,
+      }),
     });
 
     const data = await response.json();
@@ -351,11 +367,15 @@ async function runTriage() {
     } else {
       result.textContent = `Error: ${data.error}`;
       output.style.display = 'block';
+      document.getElementById('status-indicator').textContent = 'Error';
+      document.getElementById('status-indicator').className = 'status-indicator status-error';
     }
   } catch (error) {
     console.error('Error running triage:', error);
     document.getElementById('triage-result').textContent = `Error: ${error.message}`;
     document.getElementById('triage-output').style.display = 'block';
+    document.getElementById('status-indicator').textContent = 'Error';
+    document.getElementById('status-indicator').className = 'status-indicator status-error';
   } finally {
     runTriageBtn.disabled = false;
     runTriageBtn.textContent = '▶ Run Triage';
@@ -519,13 +539,17 @@ function updateProviderStatus(provider, hasKey, isCurrent) {
   const statusElement = document.getElementById(`${provider}-status`);
   const cardElement = document.getElementById(`${provider}-card`);
 
-  if (!statusElement) return;
+  if (!statusElement) {
+    console.warn(`Status element not found for provider: ${provider}`);
+    return;
+  }
 
   if (hasKey) {
     statusElement.textContent = isCurrent ? '✓ Current' : '✓ Available';
     statusElement.className = 'provider-status available';
     if (cardElement) {
       cardElement.style.borderColor = isCurrent ? 'var(--primary)' : 'var(--border)';
+      cardElement.style.borderWidth = '2px';
       cardElement.style.opacity = '1';
       if (isCurrent) {
         cardElement.classList.add('current');
@@ -538,6 +562,7 @@ function updateProviderStatus(provider, hasKey, isCurrent) {
     statusElement.className = 'provider-status unavailable';
     if (cardElement) {
       cardElement.style.opacity = '0.6';
+      cardElement.style.borderColor = 'var(--border)';
     }
   }
 }
