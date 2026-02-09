@@ -23,8 +23,9 @@ test.describe('Settings View', () => {
 
     // Check provider names are visible
     const providerNames = await page.locator('.provider-card h5').allTextContents();
-    expect(providerNames).toContain('Gemini 2.0 Flash');
-    expect(providerNames).toContain('Perplexity Sonar');
+    expect(providerNames).toContain('Gemini');
+    expect(providerNames).toContain('Claude');
+    expect(providerNames).toContain('Perplexity');
   });
 
   test('should show provider availability status', async ({ page }) => {
@@ -47,7 +48,7 @@ test.describe('Settings View', () => {
     // Check current provider display
     const currentProvider = await page.textContent('#provider-display');
     expect(currentProvider).toBeTruthy();
-    expect(['Gemini', 'Perplexity'].some((p) => currentProvider?.includes(p))).toBeTruthy();
+    expect(['Gemini', 'Claude', 'Perplexity'].some((p) => currentProvider?.includes(p))).toBeTruthy();
   });
 
   test('should switch provider when button clicked', async ({ page }) => {
@@ -80,8 +81,8 @@ test.describe('Settings View', () => {
     await page.click('[data-view="settings"]');
 
     // Check localStorage has provider stored
-    const selectedProvider = await page.evaluate(() => localStorage.getItem('selectedProvider'));
-    expect(['gemini', 'perplexity']).toContain(selectedProvider);
+    const selectedProvider = await page.evaluate(() => localStorage.getItem('ai_provider'));
+    expect(['gemini', 'claude', 'perplexity']).toContain(selectedProvider);
   });
 
   test('should show system status information', async ({ page }) => {
@@ -100,13 +101,13 @@ test.describe('Settings View', () => {
     await page.goto('/');
     await page.click('[data-view="settings"]');
 
-    // Check info list exists and has content
-    const infoList = await page.locator('.info-list li').count();
-    expect(infoList).toBeGreaterThan(0);
+    // Check settings panel has loaded with all sections
+    const settingsSections = await page.locator('.settings-section').count();
+    expect(settingsSections).toBeGreaterThan(0);
 
-    // Check info contains provider guidance
-    const infoText = await page.textContent('.info-list');
-    expect(infoText).toContain('Gemini');
+    // Check that settings content includes provider information
+    const settingsText = await page.textContent('.settings-panel');
+    expect(settingsText).toContain('Gemini');
   });
 });
 

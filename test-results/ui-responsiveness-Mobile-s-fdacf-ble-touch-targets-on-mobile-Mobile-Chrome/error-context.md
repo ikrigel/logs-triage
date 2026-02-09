@@ -1,0 +1,57 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e18] [cursor=pointer]
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - heading "Dashboard" [level=2] [ref=e21]
+      - generic [ref=e23]: Ready
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - heading "Total Logs Processed" [level=3] [ref=e27]
+          - paragraph [ref=e28]: "28"
+        - generic [ref=e29]:
+          - heading "Open Tickets" [level=3] [ref=e30]
+          - paragraph [ref=e31]: "0"
+        - generic [ref=e32]:
+          - heading "Critical Issues" [level=3] [ref=e33]
+          - paragraph [ref=e34]: "0"
+        - generic [ref=e35]:
+          - heading "Last Updated" [level=3] [ref=e36]
+          - paragraph [ref=e37]: 12:59:47 AM
+      - generic [ref=e38]:
+        - heading "Quick Actions" [level=3] [ref=e39]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - heading "Run Triage" [level=4] [ref=e42]
+            - paragraph [ref=e43]: Analyze logs and generate tickets
+            - button "Go to Triage" [ref=e44] [cursor=pointer]
+          - generic [ref=e45]:
+            - heading "View Logs" [level=4] [ref=e46]
+            - paragraph [ref=e47]: Browse and filter production logs
+            - button "Go to Logs" [ref=e48] [cursor=pointer]
+          - generic [ref=e49]:
+            - heading "Manage Tickets" [level=4] [ref=e50]
+            - paragraph [ref=e51]: Create and update support tickets
+            - button "Go to Tickets" [ref=e52] [cursor=pointer]
+```

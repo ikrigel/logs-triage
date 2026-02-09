@@ -35,7 +35,7 @@ test.describe('UI Responsiveness Tests', () => {
 
       // Check provider cards are visible
       const providerCards = await page.locator('.provider-card').count();
-      expect(providerCards).toBe(2); // Gemini and Perplexity
+      expect(providerCards).toBe(3); // Gemini, Claude, and Perplexity
 
       // Check buttons are accessible
       const buttons = await page.locator('.provider-card .btn').all();
