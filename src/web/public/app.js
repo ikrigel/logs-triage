@@ -370,29 +370,71 @@ async function loadSettings() {
     const settings = await response.json();
 
     const currentProvider = settings.currentProvider;
-    document.getElementById('provider-display').textContent = currentProvider;
-    document.getElementById('theme-status').textContent = document.documentElement.classList.contains('dark') ? 'Dark' : 'Light';
 
-    // Update provider statuses
+    // Store in localStorage for persistence
+    localStorage.setItem('selectedProvider', currentProvider);
+
+    // Update provider display
+    const providerDisplay = document.getElementById('provider-display');
+    if (providerDisplay) {
+      providerDisplay.textContent = currentProvider.charAt(0).toUpperCase() + currentProvider.slice(1);
+    }
+
+    // Update theme status
+    const themeStatus = document.getElementById('theme-status');
+    if (themeStatus) {
+      themeStatus.textContent = document.documentElement.classList.contains('dark') ? 'Dark' : 'Light';
+    }
+
+    // Update provider statuses and styling
     Object.entries(settings.availableProviders).forEach(([key, provider]) => {
       const statusElement = document.getElementById(`${key}-status`);
+      const cardElement = document.querySelector(`.provider-card:has(#${key}-status)`);
+
       if (statusElement) {
         if (provider.available) {
-          statusElement.textContent = key === currentProvider ? '✓ Current' : '✓ Available';
+          const isCurrent = key === currentProvider;
+          statusElement.textContent = isCurrent ? '✓ Current' : '✓ Available';
           statusElement.className = 'provider-status available';
+
+          // Highlight current provider
+          if (cardElement) {
+            if (isCurrent) {
+              cardElement.classList.add('current');
+              cardElement.style.borderColor = 'var(--primary)';
+            } else {
+              cardElement.classList.remove('current');
+              cardElement.style.borderColor = 'var(--border)';
+            }
+          }
         } else {
           statusElement.textContent = '✗ Not Configured';
           statusElement.className = 'provider-status unavailable';
+          if (cardElement) {
+            cardElement.classList.remove('current');
+            cardElement.style.opacity = '0.6';
+          }
         }
       }
     });
   } catch (error) {
     console.error('Error loading settings:', error);
+    const providerDisplay = document.getElementById('provider-display');
+    if (providerDisplay) {
+      providerDisplay.textContent = 'Gemini (cached)';
+    }
   }
 }
 
 async function switchProvider(provider) {
   try {
+    // Optimistic update - show immediately
+    localStorage.setItem('selectedProvider', provider);
+    const providerDisplay = document.getElementById('provider-display');
+    if (providerDisplay) {
+      providerDisplay.textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
+    }
+
     const response = await fetch('/api/settings/provider', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -400,15 +442,32 @@ async function switchProvider(provider) {
     });
 
     if (!response.ok) {
-      alert('Failed to switch provider');
-      return;
+      throw new Error('Failed to switch provider');
     }
 
     const result = await response.json();
-    alert(`Switched to ${provider}: ${result.message}`);
-    loadSettings();
+
+    // Show success with toast instead of alert
+    showToast(`Switched to ${provider}: ${result.message}`, 'success');
+
+    // Refresh settings to confirm
+    setTimeout(() => loadSettings(), 500);
   } catch (error) {
     console.error('Error switching provider:', error);
-    alert('Error switching provider');
+    showToast('Error switching provider', 'error');
+    loadSettings(); // Reload to reset UI
   }
+}
+
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }

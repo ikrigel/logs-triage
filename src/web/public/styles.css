@@ -4,12 +4,15 @@
   --danger: #ef4444;
   --warning: #f59e0b;
   --success: #10b981;
+  --info: #06b6d4;
   --bg: #ffffff;
   --bg-secondary: #f8fafc;
   --text: #1e293b;
   --text-secondary: #64748b;
   --border: #e2e8f0;
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --surface: #ffffff;
+  --hover: #f1f5f9;
 }
 
 html.dark {
@@ -697,6 +700,58 @@ body {
   border-bottom: none;
 }
 
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-success {
+  background: var(--success);
+  color: white;
+}
+
+.toast-error {
+  background: var(--danger);
+  color: white;
+}
+
+.toast-info {
+  background: var(--info);
+  color: white;
+}
+
+.toast-warning {
+  background: var(--warning);
+  color: white;
+}
+
+/* Provider Card Enhancement */
+.provider-card.current {
+  border-width: 3px;
+  background: rgba(14, 165, 233, 0.05);
+}
+
+.provider-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
@@ -725,6 +780,7 @@ body {
 }
 
 @media (max-width: 640px) {
+  /* Mobile Sidebar */
   .sidebar {
     position: fixed;
     left: 0;
@@ -732,6 +788,7 @@ body {
     height: 100vh;
     z-index: 1000;
     transform: translateX(-100%);
+    width: 250px;
   }
 
   .sidebar.open {
@@ -740,5 +797,124 @@ body {
 
   .main-content {
     width: 100%;
+  }
+
+  /* Mobile Header */
+  .header {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem !important;
+  }
+
+  .header h2 {
+    font-size: 1.3rem;
+  }
+
+  /* Mobile Typography */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Mobile Cards */
+  .card {
+    padding: 1rem;
+  }
+
+  .card-value {
+    font-size: 1.5rem;
+  }
+
+  /* Mobile Buttons */
+  .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-large {
+    width: 100%;
+  }
+
+  /* Mobile Tables */
+  .logs-table {
+    font-size: 0.85rem;
+  }
+
+  .logs-table th,
+  .logs-table td {
+    padding: 0.5rem;
+  }
+
+  /* Mobile Forms */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    font-size: 0.9rem;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 1rem; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile Settings */
+  .settings-panel {
+    padding: 1rem;
+  }
+
+  .provider-grid {
+    gap: 0.75rem;
+  }
+
+  .provider-card {
+    padding: 1rem;
+  }
+
+  .provider-card h5 {
+    font-size: 1rem;
+  }
+
+  .provider-card p {
+    font-size: 0.8rem;
+  }
+
+  /* Mobile Toast */
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+
+  /* Mobile Filter Panel */
+  .filters-panel {
+    padding: 1rem;
+  }
+
+  /* Mobile Pagination */
+  .pagination {
+    gap: 0.5rem;
+  }
+
+  .pagination button,
+  .pagination span {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Mobile Output */
+  .output-content {
+    font-size: 0.75rem;
+    max-height: 300px;
   }
 }
