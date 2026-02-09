@@ -30,7 +30,9 @@ export class AIService {
       if (!apiKey) {
         throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not set in environment');
       }
-      this.model = google('gemini-1.5-flash', { apiKey });
+      // Set environment variable for the google SDK
+      process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+      this.model = google('gemini-2.0-flash');
     } else {
       throw new Error(`Provider ${provider} not yet implemented`);
     }
@@ -45,25 +47,51 @@ export class AIService {
     stop_reason?: string;
   }> {
     try {
+      const toolsDescription = toolDefinitions
+        .map((tool) => {
+          const schema = (tool.inputSchema as any).description || 'See properties below';
+          const props = (tool.inputSchema as any)._def?.schema?.shape || {};
+          const propDescriptions = Object.entries(props)
+            .map(([key]) => `  - ${key}`)
+            .join('\n');
+          return `- ${tool.name}: ${tool.description}\n${propDescriptions}`;
+        })
+        .join('\n');
+
+      const enhancedSystem = `${systemPrompt}
+
+AVAILABLE TOOLS:
+${toolsDescription}
+
+When using tools, format your response with <TOOL_CALL> blocks like this:
+<TOOL_CALL>
+{
+  "toolName": "search_logs",
+  "arguments": { "keyword": "error" }
+}
+</TOOL_CALL>`;
+
       const result = await generateText({
         model: this.model,
-        system: systemPrompt,
+        system: enhancedSystem,
         messages: messages as any,
-        tools: toolDefinitions as any,
         temperature: this.temperature,
-        maxTokens: this.maxTokens,
       });
 
-      // Extract tool calls from the result if available
+      // Parse tool calls from the response text
       const toolCalls: Array<{ toolName: string; arguments: Record<string, any> }> = [];
+      const toolCallRegex = /<TOOL_CALL>\s*(\{[\s\S]*?\})\s*<\/TOOL_CALL>/g;
+      let match;
 
-      if (result.toolCalls && Array.isArray(result.toolCalls)) {
-        result.toolCalls.forEach((toolCall: any) => {
-          toolCalls.push({
-            toolName: toolCall.toolName,
-            arguments: toolCall.args || {},
-          });
-        });
+      while ((match = toolCallRegex.exec(result.text)) !== null) {
+        try {
+          const toolCall = JSON.parse(match[1]);
+          if (toolCall.toolName && toolCall.arguments) {
+            toolCalls.push(toolCall);
+          }
+        } catch {
+          // Skip malformed tool calls
+        }
       }
 
       return {

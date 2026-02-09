@@ -6,7 +6,7 @@ import { alertTeam, AlertInput } from './alertTeam';
 import { LogEntry, RecentChanges } from '../agent/types';
 import { TicketStorage } from '../storage/tickets';
 
-// Zod schemas for tool inputs
+// Zod schemas for validation (used for both LLM and input validation)
 const SearchLogsSchema = z.object({
   requestId: z.string().optional(),
   userId: z.string().optional(),
@@ -41,35 +41,35 @@ const AlertTeamSchema = z.object({
   issueSummary: z.string(),
 });
 
-// Tool definitions for LLM
+// Tool definitions for LLM (Zod schemas work with ai-sdk)
 export const toolDefinitions = [
   {
-    name: 'searchLogs',
+    name: 'search_logs',
     description:
       'Search through logs by various criteria (request ID, user ID, batch ID, source ID, service name, etc.). Can perform deep recursive searches to find related logs.',
     inputSchema: SearchLogsSchema,
   },
   {
-    name: 'checkRecentChanges',
+    name: 'check_recent_changes',
     description:
       'Check for recent system changes (deployments, config changes, migrations) and correlate them with errors in logs.',
     inputSchema: CheckChangesSchema,
   },
   {
-    name: 'createTicket',
+    name: 'create_ticket',
     description:
       'Create a support ticket to track an issue. Include title, description, severity level, and affected services.',
     inputSchema: CreateTicketSchema,
   },
   {
-    name: 'alertTeam',
+    name: 'alert_team',
     description:
       'Send an alert to the team about a critical issue. Specify severity, affected services, and issue summary.',
     inputSchema: AlertTeamSchema,
   },
 ];
 
-// Tool execution wrapper
+// Tool execution wrapper (maps snake_case names from LLM to function names)
 export async function executeTool(
   toolName: string,
   args: Record<string, any>,
@@ -80,6 +80,7 @@ export async function executeTool(
   }
 ): Promise<any> {
   switch (toolName) {
+    case 'search_logs':
     case 'searchLogs': {
       const validated = SearchLogsSchema.parse(args);
       const result = await searchLogs(context.allLogs, validated);
@@ -90,6 +91,7 @@ export async function executeTool(
       };
     }
 
+    case 'check_recent_changes':
     case 'checkRecentChanges': {
       const validated = CheckChangesSchema.parse(args);
       const result = checkRecentChanges(context.recentChanges, context.allLogs, validated);
@@ -100,6 +102,7 @@ export async function executeTool(
       };
     }
 
+    case 'create_ticket':
     case 'createTicket': {
       const validated = CreateTicketSchema.parse(args);
       const ticket = await createTicket(context.storage, {
@@ -113,6 +116,7 @@ export async function executeTool(
       };
     }
 
+    case 'alert_team':
     case 'alertTeam': {
       const validated = AlertTeamSchema.parse(args);
       const result = alertTeam(validated);
