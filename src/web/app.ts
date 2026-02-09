@@ -248,6 +248,46 @@ app.get('/api/tickets/:id/close', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/settings', (req: Request, res: Response) => {
+  try {
+    const provider = process.env.AI_PROVIDER || 'gemini';
+    const hasGeminiKey = !!process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    const hasPerplexityKey =
+      !!process.env.PERPLEXITY_API_KEY || !!process.env.perplexity_api_key;
+
+    res.json({
+      currentProvider: provider,
+      availableProviders: {
+        gemini: { name: 'Gemini 2.0 Flash', available: hasGeminiKey },
+        perplexity: { name: 'Perplexity Sonar', available: hasPerplexityKey },
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get settings' });
+  }
+});
+
+app.post('/api/settings/provider', (req: Request, res: Response) => {
+  try {
+    const { provider } = req.body;
+
+    if (!provider || !['gemini', 'perplexity'].includes(provider)) {
+      return res.status(400).json({ error: 'Invalid provider' });
+    }
+
+    // Set environment variable for this session
+    process.env.AI_PROVIDER = provider;
+
+    res.json({
+      success: true,
+      message: `Switched to ${provider}`,
+      currentProvider: provider,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update settings' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   console.log(`Open http://localhost:${port} in your browser`);

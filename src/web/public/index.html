@@ -24,6 +24,7 @@
           <li><a href="#" class="nav-link" data-view="logs">Logs</a></li>
           <li><a href="#" class="nav-link" data-view="tickets">Tickets</a></li>
           <li><a href="#" class="nav-link" data-view="triage">Run Triage</a></li>
+          <li><a href="#" class="nav-link" data-view="settings">Settings</a></li>
         </ul>
         <div class="sidebar-footer">
           <button id="theme-toggle" class="theme-btn" title="Toggle theme">🌙</button>
@@ -235,6 +236,62 @@
             <div id="triage-output" class="output-panel" style="display: none">
               <h4>Agent Output</h4>
               <div id="triage-result" class="output-content"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings-view" class="view">
+          <div class="settings-panel">
+            <h3>Settings & Configuration</h3>
+
+            <div class="settings-section">
+              <h4>AI Provider</h4>
+              <p>Choose which AI service to use for log analysis and investigation.</p>
+
+              <div class="provider-grid">
+                <div class="provider-card">
+                  <h5>Gemini 2.0 Flash</h5>
+                  <p class="provider-desc">Fast, efficient log analysis</p>
+                  <div class="provider-status" id="gemini-status">Checking...</div>
+                  <button class="btn btn-secondary" onclick="switchProvider('gemini')">Use Gemini</button>
+                </div>
+
+                <div class="provider-card">
+                  <h5>Perplexity Sonar</h5>
+                  <p class="provider-desc">Alternative AI analysis</p>
+                  <div class="provider-status" id="perplexity-status">Checking...</div>
+                  <button class="btn btn-secondary" onclick="switchProvider('perplexity')">Use Perplexity</button>
+                </div>
+              </div>
+
+              <div id="current-provider" class="current-setting" style="margin-top: 1rem;">
+                Current: <strong id="provider-display">Loading...</strong>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h4>System Status</h4>
+              <div class="status-grid">
+                <div class="status-item">
+                  <span class="status-label">API Status:</span>
+                  <span class="status-value" id="api-status">Checking...</span>
+                </div>
+                <div class="status-item">
+                  <span class="status-label">Theme:</span>
+                  <span class="status-value" id="theme-status">Light</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h4>Help & Information</h4>
+              <ul class="info-list">
+                <li><strong>Gemini:</strong> Use this if you have quota available or a paid plan</li>
+                <li><strong>Perplexity:</strong> Alternative option if Gemini quota is exceeded</li>
+                <li>Settings are stored per session and reset on page reload</li>
+                <li>For persistent configuration, set AI_PROVIDER environment variable</li>
+              </ul>
             </div>
           </div>
         </div>

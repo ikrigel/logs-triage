@@ -13,28 +13,37 @@ interface AIServiceConfig {
 }
 
 export class AIService {
-  private model: LanguageModel;
+  private model?: LanguageModel;
+  private provider: AIProvider;
+  private apiKey: string;
   private temperature: number;
   private maxTokens: number;
 
   constructor(config: AIServiceConfig = {}) {
-    const provider = config.provider || 'gemini';
+    const provider = config.provider || process.env.AI_PROVIDER || 'gemini';
     const temperature = config.temperature ?? 0.7;
     const maxTokens = config.maxTokens ?? 2000;
 
     this.temperature = temperature;
     this.maxTokens = maxTokens;
+    this.provider = provider as AIProvider;
 
     if (provider === 'gemini') {
       const apiKey = config.apiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
       if (!apiKey) {
         throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not set in environment');
       }
-      // Set environment variable for the google SDK
       process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+      this.apiKey = apiKey;
       this.model = google('gemini-2.0-flash');
+    } else if (provider === 'perplexity') {
+      const apiKey = config.apiKey || process.env.PERPLEXITY_API_KEY || (process.env as any).perplexity_api_key;
+      if (!apiKey) {
+        throw new Error('PERPLEXITY_API_KEY not set in environment');
+      }
+      this.apiKey = apiKey;
     } else {
-      throw new Error(`Provider ${provider} not yet implemented`);
+      throw new Error(`Unsupported AI provider: ${provider}`);
     }
   }
 
@@ -47,18 +56,38 @@ export class AIService {
     stop_reason?: string;
   }> {
     try {
-      const toolsDescription = toolDefinitions
-        .map((tool) => {
-          const schema = (tool.inputSchema as any).description || 'See properties below';
-          const props = (tool.inputSchema as any)._def?.schema?.shape || {};
-          const propDescriptions = Object.entries(props)
-            .map(([key]) => `  - ${key}`)
-            .join('\n');
-          return `- ${tool.name}: ${tool.description}\n${propDescriptions}`;
-        })
-        .join('\n');
+      if (this.provider === 'perplexity') {
+        return await this.callPerplexity(systemPrompt, messages);
+      } else {
+        return await this.callGemini(systemPrompt, messages);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`AI Service error: ${error.message}`);
+      }
+      throw error;
+    }
+  }
 
-      const enhancedSystem = `${systemPrompt}
+  private async callGemini(
+    systemPrompt: string,
+    messages: Array<{ role: string; content: string }>
+  ): Promise<{
+    response: string;
+    toolCalls?: Array<{ toolName: string; arguments: Record<string, any> }>;
+    stop_reason?: string;
+  }> {
+    const toolsDescription = toolDefinitions
+      .map((tool) => {
+        const props = (tool.inputSchema as any)._def?.schema?.shape || {};
+        const propDescriptions = Object.entries(props)
+          .map(([key]) => `  - ${key}`)
+          .join('\n');
+        return `- ${tool.name}: ${tool.description}\n${propDescriptions}`;
+      })
+      .join('\n');
+
+    const enhancedSystem = `${systemPrompt}
 
 AVAILABLE TOOLS:
 ${toolsDescription}
@@ -71,40 +100,104 @@ When using tools, format your response with <TOOL_CALL> blocks like this:
 }
 </TOOL_CALL>`;
 
-      const result = await generateText({
-        model: this.model,
-        system: enhancedSystem,
-        messages: messages as any,
-        temperature: this.temperature,
-      });
+    const result = await generateText({
+      model: this.model!,
+      system: enhancedSystem,
+      messages: messages as any,
+      temperature: this.temperature,
+    });
 
-      // Parse tool calls from the response text
-      const toolCalls: Array<{ toolName: string; arguments: Record<string, any> }> = [];
-      const toolCallRegex = /<TOOL_CALL>\s*(\{[\s\S]*?\})\s*<\/TOOL_CALL>/g;
-      let match;
+    // Parse tool calls from the response text
+    const toolCalls: Array<{ toolName: string; arguments: Record<string, any> }> = [];
+    const toolCallRegex = /<TOOL_CALL>\s*(\{[\s\S]*?\})\s*<\/TOOL_CALL>/g;
+    let match;
 
-      while ((match = toolCallRegex.exec(result.text)) !== null) {
-        try {
-          const toolCall = JSON.parse(match[1]);
-          if (toolCall.toolName && toolCall.arguments) {
-            toolCalls.push(toolCall);
-          }
-        } catch {
-          // Skip malformed tool calls
+    while ((match = toolCallRegex.exec(result.text)) !== null) {
+      try {
+        const toolCall = JSON.parse(match[1]);
+        if (toolCall.toolName && toolCall.arguments) {
+          toolCalls.push(toolCall);
         }
+      } catch {
+        // Skip malformed tool calls
       }
-
-      return {
-        response: result.text,
-        toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
-        stop_reason: result.finishReason,
-      };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`AI Service error: ${error.message}`);
-      }
-      throw error;
     }
+
+    return {
+      response: result.text,
+      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      stop_reason: result.finishReason,
+    };
+  }
+
+  private async callPerplexity(
+    systemPrompt: string,
+    messages: Array<{ role: string; content: string }>
+  ): Promise<{
+    response: string;
+    toolCalls?: Array<{ toolName: string; arguments: Record<string, any> }>;
+    stop_reason?: string;
+  }> {
+    const toolsDescription = toolDefinitions
+      .map((tool) => `- ${tool.name}: ${tool.description}`)
+      .join('\n');
+
+    const enhancedSystem = `${systemPrompt}
+
+AVAILABLE TOOLS:
+${toolsDescription}
+
+When using tools, format your response with <TOOL_CALL> blocks.`;
+
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'sonar',
+        messages: [
+          { role: 'system', content: enhancedSystem },
+          ...messages.map((m) => ({
+            role: m.role === 'assistant' ? 'assistant' : 'user',
+            content: m.content,
+          })),
+        ],
+        temperature: this.temperature,
+        max_tokens: this.maxTokens,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Perplexity API error: ${response.status} - ${error}`);
+    }
+
+    const data = (await response.json()) as any;
+    const responseText = data.choices?.[0]?.message?.content || '';
+
+    // Parse tool calls
+    const toolCalls: Array<{ toolName: string; arguments: Record<string, any> }> = [];
+    const toolCallRegex = /<TOOL_CALL>\s*(\{[\s\S]*?\})\s*<\/TOOL_CALL>/g;
+    let match;
+
+    while ((match = toolCallRegex.exec(responseText)) !== null) {
+      try {
+        const toolCall = JSON.parse(match[1]);
+        if (toolCall.toolName && toolCall.arguments) {
+          toolCalls.push(toolCall);
+        }
+      } catch {
+        // Skip malformed tool calls
+      }
+    }
+
+    return {
+      response: responseText,
+      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      stop_reason: data.choices?.[0]?.finish_reason || 'stop',
+    };
   }
 
   generateSystemPrompt(logSetNumber: number): string {

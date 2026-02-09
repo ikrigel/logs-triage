@@ -69,6 +69,8 @@ function switchView(view) {
     loadTickets();
   } else if (view === 'dashboard') {
     loadDashboard();
+  } else if (view === 'settings') {
+    loadSettings();
   }
 }
 
@@ -359,4 +361,54 @@ function updateDashboardStats(stats) {
   document.getElementById('open-tickets').textContent = stats.open;
   document.getElementById('critical-tickets').textContent = stats.critical;
   document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+// Settings Management
+async function loadSettings() {
+  try {
+    const response = await fetch('/api/settings');
+    const settings = await response.json();
+
+    const currentProvider = settings.currentProvider;
+    document.getElementById('provider-display').textContent = currentProvider;
+    document.getElementById('theme-status').textContent = document.documentElement.classList.contains('dark') ? 'Dark' : 'Light';
+
+    // Update provider statuses
+    Object.entries(settings.availableProviders).forEach(([key, provider]) => {
+      const statusElement = document.getElementById(`${key}-status`);
+      if (statusElement) {
+        if (provider.available) {
+          statusElement.textContent = key === currentProvider ? '✓ Current' : '✓ Available';
+          statusElement.className = 'provider-status available';
+        } else {
+          statusElement.textContent = '✗ Not Configured';
+          statusElement.className = 'provider-status unavailable';
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error loading settings:', error);
+  }
+}
+
+async function switchProvider(provider) {
+  try {
+    const response = await fetch('/api/settings/provider', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider }),
+    });
+
+    if (!response.ok) {
+      alert('Failed to switch provider');
+      return;
+    }
+
+    const result = await response.json();
+    alert(`Switched to ${provider}: ${result.message}`);
+    loadSettings();
+  } catch (error) {
+    console.error('Error switching provider:', error);
+    alert('Error switching provider');
+  }
 }
