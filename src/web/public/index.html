@@ -243,55 +243,144 @@
         <!-- Settings View -->
         <div id="settings-view" class="view">
           <div class="settings-panel">
-            <h3>Settings & Configuration</h3>
+            <h3>⚙️ Settings & Configuration</h3>
 
+            <!-- API Keys Section -->
             <div class="settings-section">
-              <h4>AI Provider</h4>
-              <p>Choose which AI service to use for log analysis and investigation.</p>
+              <h4>🔑 API Keys Management</h4>
+              <p>Configure your API keys for AI providers. Keys are stored securely in session.</p>
 
-              <div class="provider-grid">
-                <div class="provider-card">
-                  <h5>Gemini 2.0 Flash</h5>
-                  <p class="provider-desc">Fast, efficient log analysis</p>
-                  <div class="provider-status" id="gemini-status">Checking...</div>
-                  <button class="btn btn-secondary" onclick="switchProvider('gemini')">Use Gemini</button>
+              <div class="api-keys-form">
+                <div class="form-group">
+                  <label for="gemini-key">Gemini API Key</label>
+                  <div class="key-input-group">
+                    <input type="password" id="gemini-key" placeholder="AIza..." class="api-key-input">
+                    <button class="btn btn-small" onclick="toggleKeyVisibility('gemini-key')">👁</button>
+                  </div>
+                  <small>Get key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a></small>
                 </div>
 
-                <div class="provider-card">
-                  <h5>Perplexity Sonar</h5>
-                  <p class="provider-desc">Alternative AI analysis</p>
-                  <div class="provider-status" id="perplexity-status">Checking...</div>
-                  <button class="btn btn-secondary" onclick="switchProvider('perplexity')">Use Perplexity</button>
+                <div class="form-group">
+                  <label for="perplexity-key">Perplexity API Key</label>
+                  <div class="key-input-group">
+                    <input type="password" id="perplexity-key" placeholder="pplx-..." class="api-key-input">
+                    <button class="btn btn-small" onclick="toggleKeyVisibility('perplexity-key')">👁</button>
+                  </div>
+                  <small>Get key at <a href="https://www.perplexity.ai/settings/api" target="_blank">perplexity.ai</a></small>
                 </div>
-              </div>
 
-              <div id="current-provider" class="current-setting" style="margin-top: 1rem;">
-                Current: <strong id="provider-display">Loading...</strong>
+                <div class="form-group">
+                  <label for="claude-key">Claude (Anthropic) API Key</label>
+                  <div class="key-input-group">
+                    <input type="password" id="claude-key" placeholder="sk-ant-..." class="api-key-input">
+                    <button class="btn btn-small" onclick="toggleKeyVisibility('claude-key')">👁</button>
+                  </div>
+                  <small>Get key at <a href="https://console.anthropic.com/api/keys" target="_blank">console.anthropic.com</a></small>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveAPIKeys()">💾 Save API Keys</button>
               </div>
             </div>
 
+            <!-- AI Model Selection -->
             <div class="settings-section">
-              <h4>System Status</h4>
-              <div class="status-grid">
-                <div class="status-item">
-                  <span class="status-label">API Status:</span>
-                  <span class="status-value" id="api-status">Checking...</span>
+              <h4>🤖 AI Model Selection</h4>
+              <p>Choose your preferred AI provider and model for log analysis.</p>
+
+              <div class="model-selection">
+                <div class="form-group">
+                  <label for="ai-provider">AI Provider</label>
+                  <select id="ai-provider" onchange="updateModelOptions()">
+                    <option value="gemini">Gemini (Google)</option>
+                    <option value="claude">Claude (Anthropic)</option>
+                    <option value="perplexity">Perplexity</option>
+                  </select>
                 </div>
+
+                <div class="form-group">
+                  <label for="ai-model">Model</label>
+                  <select id="ai-model">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                  </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveModelSelection()">✓ Save Model Selection</button>
+              </div>
+
+              <div id="current-provider" class="current-setting">
+                <div class="setting-item">
+                  <span class="setting-label">Current Provider:</span>
+                  <span class="setting-value" id="provider-display">Loading...</span>
+                </div>
+                <div class="setting-item">
+                  <span class="setting-label">Current Model:</span>
+                  <span class="setting-value" id="model-display">Loading...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Provider Status -->
+            <div class="settings-section">
+              <h4>📊 Provider Status</h4>
+              <div class="provider-grid">
+                <div class="provider-card" id="gemini-card">
+                  <h5>Gemini</h5>
+                  <p class="provider-desc">Fast & efficient</p>
+                  <div class="provider-status" id="gemini-status">Checking...</div>
+                </div>
+
+                <div class="provider-card" id="claude-card">
+                  <h5>Claude</h5>
+                  <p class="provider-desc">Advanced reasoning</p>
+                  <div class="provider-status" id="claude-status">Checking...</div>
+                </div>
+
+                <div class="provider-card" id="perplexity-card">
+                  <h5>Perplexity</h5>
+                  <p class="provider-desc">Alternative option</p>
+                  <div class="provider-status" id="perplexity-status">Checking...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="settings-section">
+              <h4>🖥️ System Status</h4>
+              <div class="status-grid">
                 <div class="status-item">
                   <span class="status-label">Theme:</span>
                   <span class="status-value" id="theme-status">Light</span>
                 </div>
+                <div class="status-item">
+                  <span class="status-label">Session:</span>
+                  <span class="status-value" id="session-status">Active</span>
+                </div>
               </div>
             </div>
 
-            <div class="settings-section">
-              <h4>Help & Information</h4>
-              <ul class="info-list">
-                <li><strong>Gemini:</strong> Use this if you have quota available or a paid plan</li>
-                <li><strong>Perplexity:</strong> Alternative option if Gemini quota is exceeded</li>
-                <li>Settings are stored per session and reset on page reload</li>
-                <li>For persistent configuration, set AI_PROVIDER environment variable</li>
-              </ul>
+            <!-- Help Information -->
+            <div class="settings-section info-section">
+              <h4>ℹ️ Help & Information</h4>
+              <div class="info-cards">
+                <div class="info-card">
+                  <strong>Gemini Models</strong>
+                  <p>2.0 Flash is fastest, 1.5 Pro is most capable</p>
+                </div>
+                <div class="info-card">
+                  <strong>Claude</strong>
+                  <p>Advanced reasoning and analysis capabilities</p>
+                </div>
+                <div class="info-card">
+                  <strong>Perplexity</strong>
+                  <p>Alternative option, good for fallback</p>
+                </div>
+                <div class="info-card">
+                  <strong>API Keys</strong>
+                  <p>Stored securely in session, never logged</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -53,16 +53,37 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchView(view) {
+  // Store old view before updating state
+  const oldView = state.currentView;
   state.currentView = view;
-  document.getElementById(`${state.currentView}-view`).classList.remove('active');
-  document.getElementById(`${view}-view`).classList.add('active');
 
+  // Remove active class from old view
+  const oldViewElement = document.getElementById(`${oldView}-view`);
+  if (oldViewElement) {
+    oldViewElement.classList.remove('active');
+  }
+
+  // Add active class to new view
+  const newViewElement = document.getElementById(`${view}-view`);
+  if (newViewElement) {
+    newViewElement.classList.add('active');
+  }
+
+  // Update navigation links
   navLinks.forEach((link) => link.classList.remove('active'));
-  document.querySelector(`[data-view="${view}"]`).classList.add('active');
+  const activeLink = document.querySelector(`[data-view="${view}"]`);
+  if (activeLink) {
+    activeLink.classList.add('active');
+  }
 
-  document.getElementById('page-title').textContent =
-    view.charAt(0).toUpperCase() + view.slice(1);
+  // Update page title
+  const pageTitle = document.getElementById('page-title');
+  if (pageTitle) {
+    const titleText = view.charAt(0).toUpperCase() + view.slice(1).replace(/-/g, ' ');
+    pageTitle.textContent = titleText;
+  }
 
+  // Load view-specific content
   if (view === 'logs') {
     loadLogSet();
   } else if (view === 'tickets') {
@@ -364,20 +385,39 @@ function updateDashboardStats(stats) {
 }
 
 // Settings Management
-async function loadSettings() {
+function loadSettings() {
   try {
-    const response = await fetch('/api/settings');
-    const settings = await response.json();
+    // Get stored settings
+    const provider = localStorage.getItem('ai_provider') || 'gemini';
+    const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
 
-    const currentProvider = settings.currentProvider;
-
-    // Store in localStorage for persistence
-    localStorage.setItem('selectedProvider', currentProvider);
+    // Check API keys
+    const hasGeminiKey = !!sessionStorage.getItem('gemini_api_key');
+    const hasClaudeKey = !!sessionStorage.getItem('claude_api_key');
+    const hasPerplexityKey = !!sessionStorage.getItem('perplexity_api_key');
 
     // Update provider display
     const providerDisplay = document.getElementById('provider-display');
     if (providerDisplay) {
-      providerDisplay.textContent = currentProvider.charAt(0).toUpperCase() + currentProvider.slice(1);
+      providerDisplay.textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
+    }
+
+    // Update model display
+    const modelDisplay = document.getElementById('model-display');
+    if (modelDisplay) {
+      modelDisplay.textContent = model;
+    }
+
+    // Update form values
+    const providerSelect = document.getElementById('ai-provider');
+    if (providerSelect) {
+      providerSelect.value = provider;
+      updateModelOptions();
+    }
+
+    const modelSelect = document.getElementById('ai-model');
+    if (modelSelect) {
+      modelSelect.value = model;
     }
 
     // Update theme status
@@ -386,76 +426,12 @@ async function loadSettings() {
       themeStatus.textContent = document.documentElement.classList.contains('dark') ? 'Dark' : 'Light';
     }
 
-    // Update provider statuses and styling
-    Object.entries(settings.availableProviders).forEach(([key, provider]) => {
-      const statusElement = document.getElementById(`${key}-status`);
-      const cardElement = document.querySelector(`.provider-card:has(#${key}-status)`);
-
-      if (statusElement) {
-        if (provider.available) {
-          const isCurrent = key === currentProvider;
-          statusElement.textContent = isCurrent ? '✓ Current' : '✓ Available';
-          statusElement.className = 'provider-status available';
-
-          // Highlight current provider
-          if (cardElement) {
-            if (isCurrent) {
-              cardElement.classList.add('current');
-              cardElement.style.borderColor = 'var(--primary)';
-            } else {
-              cardElement.classList.remove('current');
-              cardElement.style.borderColor = 'var(--border)';
-            }
-          }
-        } else {
-          statusElement.textContent = '✗ Not Configured';
-          statusElement.className = 'provider-status unavailable';
-          if (cardElement) {
-            cardElement.classList.remove('current');
-            cardElement.style.opacity = '0.6';
-          }
-        }
-      }
-    });
+    // Update provider statuses
+    updateProviderStatus('gemini', hasGeminiKey, provider === 'gemini');
+    updateProviderStatus('claude', hasClaudeKey, provider === 'claude');
+    updateProviderStatus('perplexity', hasPerplexityKey, provider === 'perplexity');
   } catch (error) {
     console.error('Error loading settings:', error);
-    const providerDisplay = document.getElementById('provider-display');
-    if (providerDisplay) {
-      providerDisplay.textContent = 'Gemini (cached)';
-    }
-  }
-}
-
-async function switchProvider(provider) {
-  try {
-    // Optimistic update - show immediately
-    localStorage.setItem('selectedProvider', provider);
-    const providerDisplay = document.getElementById('provider-display');
-    if (providerDisplay) {
-      providerDisplay.textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
-    }
-
-    const response = await fetch('/api/settings/provider', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ provider }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to switch provider');
-    }
-
-    const result = await response.json();
-
-    // Show success with toast instead of alert
-    showToast(`Switched to ${provider}: ${result.message}`, 'success');
-
-    // Refresh settings to confirm
-    setTimeout(() => loadSettings(), 500);
-  } catch (error) {
-    console.error('Error switching provider:', error);
-    showToast('Error switching provider', 'error');
-    loadSettings(); // Reload to reset UI
   }
 }
 
@@ -470,4 +446,98 @@ function showToast(message, type = 'info') {
     toast.classList.remove('show');
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+// API Key Management
+function toggleKeyVisibility(inputId) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+  } else {
+    input.type = 'password';
+  }
+}
+
+function saveAPIKeys() {
+  const geminiKey = document.getElementById('gemini-key')?.value || '';
+  const perplexityKey = document.getElementById('perplexity-key')?.value || '';
+  const claudeKey = document.getElementById('claude-key')?.value || '';
+
+  if (!geminiKey && !perplexityKey && !claudeKey) {
+    showToast('Please enter at least one API key', 'warning');
+    return;
+  }
+
+  if (geminiKey) sessionStorage.setItem('gemini_api_key', geminiKey);
+  if (perplexityKey) sessionStorage.setItem('perplexity_api_key', perplexityKey);
+  if (claudeKey) sessionStorage.setItem('claude_api_key', claudeKey);
+
+  showToast('API keys saved securely', 'success');
+  loadSettings();
+}
+
+// Model Selection
+const modelOptions = {
+  gemini: [
+    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Fastest)' },
+    { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (Most Capable)' },
+    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+  ],
+  claude: [
+    { value: 'claude-opus', label: 'Claude Opus (Most Capable)' },
+    { value: 'claude-sonnet', label: 'Claude Sonnet (Balanced)' },
+    { value: 'claude-haiku', label: 'Claude Haiku (Fastest)' },
+  ],
+  perplexity: [
+    { value: 'sonar', label: 'Sonar (Standard)' },
+    { value: 'sonar-pro', label: 'Sonar Pro (Advanced)' },
+  ],
+};
+
+function updateModelOptions() {
+  const provider = document.getElementById('ai-provider')?.value || 'gemini';
+  const modelSelect = document.getElementById('ai-model');
+
+  if (!modelSelect) return;
+
+  const options = modelOptions[provider] || modelOptions.gemini;
+  modelSelect.innerHTML = options.map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('');
+}
+
+function saveModelSelection() {
+  const provider = document.getElementById('ai-provider')?.value || 'gemini';
+  const model = document.getElementById('ai-model')?.value || 'gemini-2.0-flash';
+
+  localStorage.setItem('ai_provider', provider);
+  localStorage.setItem('ai_model', model);
+
+  showToast(`Switched to ${provider}: ${model}`, 'success');
+  loadSettings();
+}
+
+function updateProviderStatus(provider, hasKey, isCurrent) {
+  const statusElement = document.getElementById(`${provider}-status`);
+  const cardElement = document.getElementById(`${provider}-card`);
+
+  if (!statusElement) return;
+
+  if (hasKey) {
+    statusElement.textContent = isCurrent ? '✓ Current' : '✓ Available';
+    statusElement.className = 'provider-status available';
+    if (cardElement) {
+      cardElement.style.borderColor = isCurrent ? 'var(--primary)' : 'var(--border)';
+      cardElement.style.opacity = '1';
+      if (isCurrent) {
+        cardElement.classList.add('current');
+      } else {
+        cardElement.classList.remove('current');
+      }
+    }
+  } else {
+    statusElement.textContent = '✗ No Key';
+    statusElement.className = 'provider-status unavailable';
+    if (cardElement) {
+      cardElement.style.opacity = '0.6';
+    }
+  }
 }
