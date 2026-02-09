@@ -325,14 +325,36 @@ async function submitTicket(e) {
 
 async function runTriage() {
   const logSet = parseInt(document.getElementById('triage-logset').value);
-  const provider = localStorage.getItem('ai_provider') || 'gemini';
-  const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
+  let provider = localStorage.getItem('ai_provider') || 'gemini';
+  let model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
 
-  // Get API key from sessionStorage
-  const apiKey = sessionStorage.getItem(`${provider}_api_key`);
+  // Get API key from sessionStorage, with fallback to other providers
+  let apiKey = sessionStorage.getItem(`${provider}_api_key`);
+
+  // If selected provider doesn't have a key, try other providers
+  if (!apiKey) {
+    const providers = ['gemini', 'claude', 'perplexity'];
+    for (const fallbackProvider of providers) {
+      const fallbackKey = sessionStorage.getItem(`${fallbackProvider}_api_key`);
+      if (fallbackKey) {
+        provider = fallbackProvider;
+        apiKey = fallbackKey;
+        // Update model based on fallback provider
+        if (fallbackProvider === 'gemini') {
+          model = 'gemini-2.0-flash';
+        } else if (fallbackProvider === 'claude') {
+          model = 'claude-opus';
+        } else if (fallbackProvider === 'perplexity') {
+          model = 'sonar';
+        }
+        showToast(`Using fallback provider: ${provider}`, 'info');
+        break;
+      }
+    }
+  }
 
   if (!apiKey) {
-    showToast(`No API key found for ${provider}. Please add one in settings.`, 'error');
+    showToast('No API keys found. Please add at least one API key in settings.', 'error');
     return;
   }
 
@@ -407,14 +429,23 @@ function updateDashboardStats(stats) {
 // Settings Management
 function loadSettings() {
   try {
-    // Get stored settings
+    // Get stored settings from localStorage
     const provider = localStorage.getItem('ai_provider') || 'gemini';
     const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
 
-    // Check API keys
-    const hasGeminiKey = !!sessionStorage.getItem('gemini_api_key');
-    const hasClaudeKey = !!sessionStorage.getItem('claude_api_key');
-    const hasPerplexityKey = !!sessionStorage.getItem('perplexity_api_key');
+    // Get API keys from sessionStorage
+    const geminiKey = sessionStorage.getItem('gemini_api_key') || '';
+    const claudeKey = sessionStorage.getItem('claude_api_key') || '';
+    const perplexityKey = sessionStorage.getItem('perplexity_api_key') || '';
+
+    // Populate input fields with saved keys
+    const geminiInput = document.getElementById('gemini-key');
+    const claudeInput = document.getElementById('claude-key');
+    const perplexityInput = document.getElementById('perplexity-key');
+
+    if (geminiInput) geminiInput.value = geminiKey;
+    if (claudeInput) claudeInput.value = claudeKey;
+    if (perplexityInput) perplexityInput.value = perplexityKey;
 
     // Update provider display
     const providerDisplay = document.getElementById('provider-display');
@@ -447,6 +478,10 @@ function loadSettings() {
     }
 
     // Update provider statuses
+    const hasGeminiKey = !!geminiKey;
+    const hasClaudeKey = !!claudeKey;
+    const hasPerplexityKey = !!perplexityKey;
+
     updateProviderStatus('gemini', hasGeminiKey, provider === 'gemini');
     updateProviderStatus('claude', hasClaudeKey, provider === 'claude');
     updateProviderStatus('perplexity', hasPerplexityKey, provider === 'perplexity');
@@ -488,14 +523,16 @@ function saveAPIKeys() {
   const perplexityKey = document.getElementById('perplexity-key')?.value || '';
   const claudeKey = document.getElementById('claude-key')?.value || '';
 
-  if (!geminiKey && !perplexityKey && !claudeKey) {
-    showToast('Please enter at least one API key', 'warning');
-    return;
+  // Save all keys that are provided (even if empty, to allow clearing)
+  if (geminiKey) {
+    sessionStorage.setItem('gemini_api_key', geminiKey);
   }
-
-  if (geminiKey) sessionStorage.setItem('gemini_api_key', geminiKey);
-  if (perplexityKey) sessionStorage.setItem('perplexity_api_key', perplexityKey);
-  if (claudeKey) sessionStorage.setItem('claude_api_key', claudeKey);
+  if (perplexityKey) {
+    sessionStorage.setItem('perplexity_api_key', perplexityKey);
+  }
+  if (claudeKey) {
+    sessionStorage.setItem('claude_api_key', claudeKey);
+  }
 
   // Also save the current provider and model selection
   const provider = document.getElementById('ai-provider')?.value || 'gemini';
@@ -504,6 +541,17 @@ function saveAPIKeys() {
   localStorage.setItem('ai_model', model);
 
   showToast('Settings saved! API keys & provider/model selected', 'success');
+  loadSettings();
+}
+
+function deleteAPIKey(provider) {
+  const inputId = `${provider}-key`;
+  const input = document.getElementById(inputId);
+  if (input) {
+    input.value = '';
+  }
+  sessionStorage.removeItem(`${provider}_api_key`);
+  showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API key deleted`, 'info');
   loadSettings();
 }
 
