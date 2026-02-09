@@ -44,8 +44,21 @@ document.getElementById('keyword-filter')?.addEventListener('input', applyFilter
 document.getElementById('status-filter')?.addEventListener('change', loadTickets);
 document.getElementById('severity-filter')?.addEventListener('change', loadTickets);
 
+// Initialize theme from localStorage
+function initializeTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+    themeBtn.textContent = '☀️';
+  } else {
+    document.documentElement.classList.remove('dark');
+    themeBtn.textContent = '🌙';
+  }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  initializeTheme();
   loadDashboard();
   loadTickets();
   loadLogSet();
