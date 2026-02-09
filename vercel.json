@@ -1,32 +1,22 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/web/app.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "src/web/public/**",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "GOOGLE_GENERATIVE_AI_API_KEY": "@GOOGLE_GENERATIVE_AI_API_KEY"
+  },
   "routes": [
-    {
-      "src": "/public/(.*)",
-      "dest": "/src/web/public/$1"
-    },
     {
       "src": "/api/(.*)",
       "dest": "/src/web/app.ts"
     },
     {
+      "src": "/public/(.*)",
+      "dest": "/src/web/public/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/src/web/app.ts"
     }
-  ],
-  "env": {
-    "GOOGLE_GENERATIVE_AI_API_KEY": "@google_api_key"
-  },
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  ]
 }

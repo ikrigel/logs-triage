@@ -2,14 +2,7 @@
 
 ## 🚀 Deploy in 5 Minutes
 
-### Step 1: Get API Key (1 min)
-```
-1. Go to https://aistudio.google.com/app/apikey
-2. Click "Create API Key"
-3. Copy the key (keep it handy)
-```
-
-### Step 2: Connect to Vercel (1 min)
+### Step 1: Connect to Vercel (1 min)
 ```
 1. Go to https://vercel.com/new
 2. Select "Import Git Repository"
@@ -17,27 +10,30 @@
 4. Click "Import"
 ```
 
-### Step 3: Add Environment Variable (1 min)
+### Step 2: Add Environment Variable (2 min)
 ```
 1. In Vercel: Settings → Environment Variables
 2. Add name: GOOGLE_GENERATIVE_AI_API_KEY
-3. Add value: (your key from Step 1)
+3. Add value: Your Gemini API key from https://aistudio.google.com/app/apikey
 4. Click "Save"
+5. Select "Production" environment
 ```
 
-### Step 4: Deploy (1 min)
+### Step 3: Deploy (1 min)
 ```
 1. Click "Deploy" button
-2. Wait for build to complete
+2. Wait for build to complete (~1-2 minutes)
 3. Vercel will show your live URL
+4. You'll see: "Congratulations! Your site is live"
 ```
 
-### Step 5: Test It (1 min)
+### Step 4: Test It (1 min)
 ```
-1. Open your Vercel URL
-2. Click "Run Triage"
-3. Select Log Set 1
-4. See results!
+1. Click the live URL
+2. You'll see the dashboard
+3. Click "Run Triage"
+4. Select Log Set 1
+5. Watch the AI agent investigate!
 ```
 
 ---
