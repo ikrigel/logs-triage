@@ -18,6 +18,8 @@ const state = {
 const navLinks = document.querySelectorAll('.nav-link');
 const views = document.querySelectorAll('.view');
 const themeBtn = document.getElementById('theme-toggle');
+const menuToggle = document.getElementById('menu-toggle');
+const sidebar = document.querySelector('.sidebar');
 const toggleFiltersBtn = document.getElementById('toggle-filters');
 const filtersPanel = document.getElementById('filters-panel');
 const runTriageBtn = document.getElementById('run-triage-btn');
@@ -29,8 +31,19 @@ navLinks.forEach((link) => {
     e.preventDefault();
     const view = e.target.dataset.view;
     switchView(view);
+    // Close mobile menu after selecting a view
+    if (sidebar && sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+    }
   });
 });
+
+// Mobile menu toggle
+if (menuToggle) {
+  menuToggle.addEventListener('click', () => {
+    sidebar?.classList.toggle('open');
+  });
+}
 
 themeBtn.addEventListener('click', toggleTheme);
 toggleFiltersBtn.addEventListener('click', toggleFiltersPanel);
@@ -636,5 +649,14 @@ function updateProviderStatus(provider, hasKey, isCurrent) {
       cardElement.style.opacity = '0.6';
       cardElement.style.borderColor = 'var(--border)';
     }
+  }
+}
+
+function switchToProvider(provider) {
+  const providerSelect = document.getElementById('ai-provider');
+  if (providerSelect) {
+    providerSelect.value = provider;
+    updateModelOptions();
+    saveModelSelection();
   }
 }

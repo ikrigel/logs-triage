@@ -163,6 +163,20 @@ body {
   color: #991b1b;
 }
 
+.menu-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--text);
+  display: none;
+}
+
+.menu-toggle:hover {
+  opacity: 0.7;
+}
+
 .view {
   flex: 1;
   overflow-y: auto;
@@ -912,6 +926,11 @@ body {
 }
 
 @media (max-width: 640px) {
+  /* Mobile Menu Toggle */
+  .menu-toggle {
+    display: block !important;
+  }
+
   /* Mobile Sidebar */
   .sidebar {
     position: fixed;
@@ -967,7 +986,7 @@ body {
   /* Mobile Buttons */
   .btn {
     padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    font-size: 1rem; /* 16px for iOS readability */
   }
 
   .btn-large {
@@ -1017,7 +1036,7 @@ body {
   }
 
   .provider-card p {
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* Better mobile readability */
   }
 
   /* Mobile Toast */

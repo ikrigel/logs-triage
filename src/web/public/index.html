@@ -33,6 +33,7 @@
 
       <main class="main-content">
         <header class="header">
+          <button id="menu-toggle" class="menu-toggle" style="display: none;" title="Toggle menu">☰</button>
           <h2 id="page-title">Dashboard</h2>
           <div class="header-actions">
             <span id="status-indicator" class="status-idle">Ready</span>
@@ -332,18 +333,21 @@
                   <h5>Gemini</h5>
                   <p class="provider-desc">Fast & efficient</p>
                   <div class="provider-status" id="gemini-status">Checking...</div>
+                  <button type="button" class="btn btn-small" onclick="switchToProvider('gemini')">Select</button>
                 </div>
 
                 <div class="provider-card" id="claude-card">
                   <h5>Claude</h5>
                   <p class="provider-desc">Advanced reasoning</p>
                   <div class="provider-status" id="claude-status">Checking...</div>
+                  <button type="button" class="btn btn-small" onclick="switchToProvider('claude')">Select</button>
                 </div>
 
                 <div class="provider-card" id="perplexity-card">
                   <h5>Perplexity</h5>
                   <p class="provider-desc">Alternative option</p>
                   <div class="provider-status" id="perplexity-status">Checking...</div>
+                  <button type="button" class="btn btn-small" onclick="switchToProvider('perplexity')">Select</button>
                 </div>
               </div>
             </div>
