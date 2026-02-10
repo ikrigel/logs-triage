@@ -39,7 +39,7 @@
           - paragraph [ref=e35]: "0"
         - generic [ref=e36]:
           - heading "Last Updated" [level=3] [ref=e37]
-          - paragraph [ref=e38]: 2:10:24 AM
+          - paragraph [ref=e38]: 2:10:13 AM
       - generic [ref=e39]:
         - heading "Quick Actions" [level=3] [ref=e40]
         - generic [ref=e41]:
@@ -50,7 +50,7 @@
           - generic [ref=e46]:
             - heading "View Logs" [level=4] [ref=e47]
             - paragraph [ref=e48]: Browse and filter production logs
-            - button "Go to Logs" [ref=e49] [cursor=pointer]
+            - button "Go to Logs" [active] [ref=e49] [cursor=pointer]
           - generic [ref=e50]:
             - heading "Manage Tickets" [level=4] [ref=e51]
             - paragraph [ref=e52]: Create and update support tickets

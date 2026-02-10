@@ -39,14 +39,14 @@
           - paragraph [ref=e35]: "0"
         - generic [ref=e36]:
           - heading "Last Updated" [level=3] [ref=e37]
-          - paragraph [ref=e38]: 2:10:24 AM
+          - paragraph [ref=e38]: 2:10:14 AM
       - generic [ref=e39]:
         - heading "Quick Actions" [level=3] [ref=e40]
         - generic [ref=e41]:
           - generic [ref=e42]:
             - heading "Run Triage" [level=4] [ref=e43]
             - paragraph [ref=e44]: Analyze logs and generate tickets
-            - button "Go to Triage" [ref=e45] [cursor=pointer]
+            - button "Go to Triage" [active] [ref=e45] [cursor=pointer]
           - generic [ref=e46]:
             - heading "View Logs" [level=4] [ref=e47]
             - paragraph [ref=e48]: Browse and filter production logs

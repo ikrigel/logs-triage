@@ -1,9 +1,24 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+async function navigateToSettings(page: Page) {
+  // Handle mobile menu - toggle it open if visible
+  const menuToggle = await page.locator('#menu-toggle').isVisible();
+  if (menuToggle) {
+    await page.click('#menu-toggle');
+    // Wait for menu to animate open
+    await page.waitForTimeout(300);
+  }
+
+  // Click settings link
+  await page.click('[data-view="settings"]');
+  // Wait for settings to load
+  await page.waitForSelector('.settings-panel', { timeout: 5000 }).catch(() => {});
+}
 
 test.describe('Settings View', () => {
   test('should load settings page', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Wait for settings panel to load
     await page.waitForSelector('.settings-panel');
@@ -15,7 +30,7 @@ test.describe('Settings View', () => {
 
   test('should display provider options', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check provider cards exist
     const geminiCard = await page.locator('.provider-card').first();
@@ -30,7 +45,7 @@ test.describe('Settings View', () => {
 
   test('should show provider availability status', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check status indicators
     const statuses = await page.locator('.provider-status').allTextContents();
@@ -43,7 +58,7 @@ test.describe('Settings View', () => {
 
   test('should display current provider', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check current provider display
     const currentProvider = await page.textContent('#provider-display');
@@ -53,7 +68,7 @@ test.describe('Settings View', () => {
 
   test('should switch provider when button clicked', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Get initial provider
     const initialProvider = await page.textContent('#provider-display');
@@ -78,7 +93,7 @@ test.describe('Settings View', () => {
 
   test('should persist provider selection in localStorage', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check localStorage has provider stored
     const selectedProvider = await page.evaluate(() => localStorage.getItem('ai_provider'));
@@ -87,7 +102,7 @@ test.describe('Settings View', () => {
 
   test('should show system status information', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check status section exists
     await page.waitForSelector('.status-grid');
@@ -99,7 +114,7 @@ test.describe('Settings View', () => {
 
   test('should display help information', async ({ page }) => {
     await page.goto('/');
-    await page.click('[data-view="settings"]');
+    await navigateToSettings(page);
 
     // Check settings panel has loaded with all sections
     const settingsSections = await page.locator('.settings-section').count();
