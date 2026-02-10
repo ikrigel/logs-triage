@@ -1,0 +1,225 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16]:
+          - /url: "#"
+    - button "🌙" [ref=e18]
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - heading "Dashboard" [level=2] [ref=e21]
+      - generic [ref=e22]: Ready
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - heading "Total Logs Processed" [level=3] [ref=e26]
+          - paragraph [ref=e27]: "0"
+        - generic [ref=e28]:
+          - heading "Open Tickets" [level=3] [ref=e29]
+          - paragraph [ref=e30]: "0"
+        - generic [ref=e31]:
+          - heading "Critical Issues" [level=3] [ref=e32]
+          - paragraph [ref=e33]: "0"
+        - generic [ref=e34]:
+          - heading "Last Updated" [level=3] [ref=e35]
+          - paragraph [ref=e36]: Never
+      - generic [ref=e37]:
+        - heading "Quick Actions" [level=3] [ref=e38]
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - heading "Run Triage" [level=4] [ref=e41]
+            - paragraph [ref=e42]: Analyze logs and generate tickets
+            - button "Go to Triage" [ref=e43]
+          - generic [ref=e44]:
+            - heading "View Logs" [level=4] [ref=e45]
+            - paragraph [ref=e46]: Browse and filter production logs
+            - button "Go to Logs" [ref=e47]
+          - generic [ref=e48]:
+            - heading "Manage Tickets" [level=4] [ref=e49]
+            - paragraph [ref=e50]: Create and update support tickets
+            - button "Go to Tickets" [ref=e51]
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - button "▼ Filters" [ref=e54]
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - text: Service
+            - combobox [ref=e57]:
+              - option "All Services" [selected]
+          - generic [ref=e58]:
+            - text: Level
+            - combobox [ref=e59]:
+              - option "All Levels" [selected]
+              - option "ERROR"
+              - option "WARN"
+              - option "INFO"
+          - generic [ref=e60]:
+            - text: Keyword
+            - textbox "Search logs..." [ref=e61]
+          - generic [ref=e62]:
+            - text: Log Set
+            - combobox [ref=e63]:
+              - option "Set 1" [selected]
+              - option "Set 2"
+              - option "Set 3"
+              - option "Set 4"
+              - option "Set 5"
+          - button "Clear Filters" [ref=e64]
+      - table [ref=e66]:
+        - rowgroup [ref=e67]:
+          - row "Time Service Level Message" [ref=e68]:
+            - columnheader "Time" [ref=e69]
+            - columnheader "Service" [ref=e70]
+            - columnheader "Level" [ref=e71]
+            - columnheader "Message" [ref=e72]
+        - rowgroup [ref=e73]:
+          - row "Loading logs..." [ref=e74]:
+            - cell "Loading logs..." [ref=e75]
+      - generic [ref=e76]:
+        - button "← Previous" [ref=e77]
+        - text: Page 1
+        - button "Next →" [ref=e78]
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - heading "Support Tickets" [level=3] [ref=e81]
+        - button "+ Create Ticket" [ref=e82]
+      - generic [ref=e83]:
+        - combobox [ref=e84]:
+          - option "All Statuses" [selected]
+          - option "Open"
+          - option "In Progress"
+          - option "Closed"
+        - combobox [ref=e85]:
+          - option "All Severities" [selected]
+          - option "Critical"
+          - option "High"
+          - option "Medium"
+          - option "Low"
+      - paragraph [ref=e87]: Loading tickets...
+    - generic [ref=e89]:
+      - heading "Run Triage Analysis" [level=3] [ref=e90]
+      - paragraph [ref=e91]: Select a log set and start the triage agent to analyze logs and generate tickets.
+      - generic [ref=e92]:
+        - text: Select Log Set
+        - combobox [ref=e93]:
+          - option "Log Set 1 (Healthy System)" [selected]
+          - option "Log Set 2 (Warning Pollution)"
+          - option "Log Set 3 (Critical Errors)"
+          - option "Log Set 4 (Deployment Issue)"
+          - option "Log Set 5 (Deep Investigation)"
+      - button "▶ Run Triage" [ref=e94]
+    - generic [ref=e96]:
+      - heading "⚙️ Settings & Configuration" [level=3] [ref=e97]
+      - generic [ref=e98]:
+        - heading "🔑 API Keys Management" [level=4] [ref=e99]
+        - paragraph [ref=e100]: Configure your API keys for AI providers. Keys are stored securely in session.
+        - generic [ref=e101]:
+          - generic [ref=e102]:
+            - text: Gemini API Key
+            - generic [ref=e103]:
+              - textbox "Gemini API Key" [ref=e104]:
+                - /placeholder: AIza...
+              - button "👁" [ref=e105]
+              - button "✕" [ref=e106]
+            - generic [ref=e107]:
+              - text: Get key at
+              - link "aistudio.google.com" [ref=e108]:
+                - /url: https://aistudio.google.com/app/apikey
+          - generic [ref=e109]:
+            - text: Perplexity API Key
+            - generic [ref=e110]:
+              - textbox "Perplexity API Key" [ref=e111]:
+                - /placeholder: pplx-...
+              - button "👁" [ref=e112]
+              - button "✕" [ref=e113]
+            - generic [ref=e114]:
+              - text: Get key at
+              - link "perplexity.ai" [ref=e115]:
+                - /url: https://www.perplexity.ai/settings/api
+          - generic [ref=e116]:
+            - text: Claude (Anthropic) API Key
+            - generic [ref=e117]:
+              - textbox "Claude (Anthropic) API Key" [ref=e118]:
+                - /placeholder: sk-ant-...
+              - button "👁" [ref=e119]
+              - button "✕" [ref=e120]
+            - generic [ref=e121]:
+              - text: Get key at
+              - link "console.anthropic.com" [ref=e122]:
+                - /url: https://console.anthropic.com/api/keys
+          - button "💾 Save API Keys" [ref=e123]
+      - generic [ref=e124]:
+        - heading "🤖 AI Model Selection" [level=4] [ref=e125]
+        - paragraph [ref=e126]: Choose your preferred AI provider and model for log analysis.
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - text: AI Provider
+            - combobox "AI Provider" [ref=e129]:
+              - option "Gemini (Google)" [selected]
+              - option "Claude (Anthropic)"
+              - option "Perplexity"
+          - generic [ref=e130]:
+            - text: Model
+            - combobox "Model" [ref=e131]:
+              - option "Gemini 2.0 Flash" [selected]
+              - option "Gemini 1.5 Pro"
+              - option "Gemini 1.5 Flash"
+          - button "✓ Save Model Selection" [ref=e132]
+        - generic [ref=e133]:
+          - generic [ref=e134]: "Current Provider: Loading..."
+          - generic [ref=e135]: "Current Model: Loading..."
+      - generic [ref=e136]:
+        - heading "📊 Provider Status" [level=4] [ref=e137]
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - heading "Gemini" [level=5] [ref=e140]
+            - paragraph [ref=e141]: Fast & efficient
+            - generic [ref=e142]: Checking...
+            - button "Select" [ref=e143]
+          - generic [ref=e144]:
+            - heading "Claude" [level=5] [ref=e145]
+            - paragraph [ref=e146]: Advanced reasoning
+            - generic [ref=e147]: Checking...
+            - button "Select" [ref=e148]
+          - generic [ref=e149]:
+            - heading "Perplexity" [level=5] [ref=e150]
+            - paragraph [ref=e151]: Alternative option
+            - generic [ref=e152]: Checking...
+            - button "Select" [ref=e153]
+      - generic [ref=e154]:
+        - heading "🖥️ System Status" [level=4] [ref=e155]
+        - generic [ref=e156]:
+          - generic [ref=e157]: "Theme: Light"
+          - generic [ref=e158]: "Session: Active"
+      - generic [ref=e159]:
+        - heading "ℹ️ Help & Information" [level=4] [ref=e160]
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - strong [ref=e163]: Gemini Models
+            - paragraph [ref=e164]: 2.0 Flash is fastest, 1.5 Pro is most capable
+          - generic [ref=e165]:
+            - strong [ref=e166]: Claude
+            - paragraph [ref=e167]: Advanced reasoning and analysis capabilities
+          - generic [ref=e168]:
+            - strong [ref=e169]: Perplexity
+            - paragraph [ref=e170]: Alternative option, good for fallback
+          - generic [ref=e171]:
+            - strong [ref=e172]: API Keys
+            - paragraph [ref=e173]: Stored securely in session, never logged
+```
