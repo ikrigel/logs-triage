@@ -459,6 +459,14 @@ function loadSettings() {
     const provider = localStorage.getItem('ai_provider') || 'gemini';
     const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
 
+    // Persist defaults if not already set
+    if (!localStorage.getItem('ai_provider')) {
+      localStorage.setItem('ai_provider', provider);
+    }
+    if (!localStorage.getItem('ai_model')) {
+      localStorage.setItem('ai_model', model);
+    }
+
     // Get API keys from sessionStorage
     const geminiKey = sessionStorage.getItem('gemini_api_key') || '';
     const claudeKey = sessionStorage.getItem('claude_api_key') || '';
