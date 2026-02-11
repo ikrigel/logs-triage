@@ -99,6 +99,11 @@ export class LogTriageAgent {
           isComplete = true;
           console.log(chalk.green('\n✓ Investigation complete'));
         }
+
+        // Add delay between iterations to avoid rate limits
+        if (iteration < this.maxIterations && !isComplete) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         console.log(chalk.red(`Error in iteration ${iteration}: ${errorMsg}`));

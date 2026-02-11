@@ -343,8 +343,8 @@ Log Set #${logSetNumber} Analysis:
 
   async withRetry<T>(
     fn: () => Promise<T>,
-    maxRetries: number = 3,
-    delayMs: number = 1000
+    maxRetries: number = 5,
+    delayMs: number = 2000
   ): Promise<T> {
     let lastError: Error | null = null;
 
@@ -355,8 +355,9 @@ Log Set #${logSetNumber} Analysis:
         lastError = error as Error;
 
         if (this.isRateLimited(lastError)) {
+          // Exponential backoff: 2s, 4s, 8s, 16s, 32s
           const delay = delayMs * Math.pow(2, i);
-          console.log(`Rate limited. Retrying in ${delay}ms...`);
+          console.log(`🔄 Rate limited (attempt ${i + 1}/${maxRetries}). Retrying in ${delay}ms...`);
           await new Promise((resolve) => setTimeout(resolve, delay));
         } else {
           throw error;
