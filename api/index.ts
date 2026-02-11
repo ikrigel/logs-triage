@@ -1,14 +1,14 @@
 import dotenv from 'dotenv';
+import { Request, Response } from 'express';
 
 dotenv.config();
 
-// Import the Express app from src/web/app.js
-// When deployed to Vercel, the dist/ contents become the root of /var/task/
-// So from /var/task/api/index.js, the relative path to /var/task/src/web/app.js is ../src/web/app.js
-import app from '../src/web/app.js';
+// Import the Express app from src/web/app
+// This reuses all the existing Express setup and routes defined in src/web/app.ts
+import app from '../src/web/app';
 
 // Favicon handler (return 204 No Content)
-app.get('/favicon.ico', (req, res) => {
+app.get('/favicon.ico', (req: Request, res: Response) => {
   res.status(204).end();
 });
 

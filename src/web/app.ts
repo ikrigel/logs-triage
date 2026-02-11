@@ -314,3 +314,5 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   console.log(`Open http://localhost:${port} in your browser`);
 });
+
+export default app;
