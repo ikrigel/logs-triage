@@ -17,6 +17,23 @@ const state = {
 // Chat interface state
 let currentLogSource = 'preset';
 
+// Model options for provider selection
+const modelOptions = {
+  gemini: [
+    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Fastest)' },
+    { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (Most Capable)' },
+    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+  ],
+  claude: [
+    { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet (Best)' },
+    { value: 'claude-3-5-haiku', label: 'Claude 3.5 Haiku (Fast)' },
+  ],
+  perplexity: [
+    { value: 'sonar', label: 'Sonar (Standard)' },
+    { value: 'sonar-pro', label: 'Sonar Pro (Advanced)' },
+  ],
+};
+
 // DOM Elements
 const navLinks = document.querySelectorAll('.nav-link');
 const views = document.querySelectorAll('.view');
@@ -25,7 +42,6 @@ const menuToggle = document.getElementById('menu-toggle');
 const sidebar = document.querySelector('.sidebar');
 const toggleFiltersBtn = document.getElementById('toggle-filters');
 const filtersPanel = document.getElementById('filters-panel');
-const runTriageBtn = document.getElementById('run-triage-btn');
 const ticketForm = document.getElementById('ticket-form');
 
 // Event listeners
@@ -50,7 +66,6 @@ if (menuToggle) {
 
 themeBtn.addEventListener('click', toggleTheme);
 toggleFiltersBtn.addEventListener('click', toggleFiltersPanel);
-runTriageBtn.addEventListener('click', runTriage);
 ticketForm?.addEventListener('submit', submitTicket);
 
 document.getElementById('clear-filters')?.addEventListener('click', clearFilters);
@@ -352,87 +367,6 @@ async function submitTicket(e) {
   }
 }
 
-async function runTriage() {
-  const logSet = parseInt(document.getElementById('triage-logset').value);
-  let provider = localStorage.getItem('ai_provider') || 'gemini';
-  let model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
-
-  // Get API key from localStorage, with fallback to other providers
-  let apiKey = localStorage.getItem(`${provider}_api_key`);
-
-  // If selected provider doesn't have a key, try other providers
-  if (!apiKey) {
-    const providers = ['gemini', 'claude', 'perplexity'];
-    for (const fallbackProvider of providers) {
-      const fallbackKey = localStorage.getItem(`${fallbackProvider}_api_key`);
-      if (fallbackKey) {
-        provider = fallbackProvider;
-        apiKey = fallbackKey;
-        // Update model based on fallback provider
-        if (fallbackProvider === 'gemini') {
-          model = 'gemini-2.0-flash';
-        } else if (fallbackProvider === 'claude') {
-          model = 'claude-opus';
-        } else if (fallbackProvider === 'perplexity') {
-          model = 'sonar';
-        }
-        showToast(`Using fallback provider: ${provider}`, 'info');
-        break;
-      }
-    }
-  }
-
-  if (!apiKey) {
-    showToast('No API keys found. Please add at least one API key in settings.', 'error');
-    return;
-  }
-
-  runTriageBtn.disabled = true;
-  runTriageBtn.textContent = '⏳ Running...';
-  document.getElementById('status-indicator').textContent = 'Running triage...';
-  document.getElementById('status-indicator').className = 'status-indicator status-running';
-
-  try {
-    const response = await fetch('/api/triage/run', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        logSetNumber: logSet,
-        provider: provider,
-        model: model,
-        apiKey: apiKey,
-      }),
-    });
-
-    const data = await response.json();
-
-    const output = document.getElementById('triage-output');
-    const result = document.getElementById('triage-result');
-
-    if (data.success) {
-      result.textContent = data.result;
-      output.style.display = 'block';
-      document.getElementById('status-indicator').textContent = `Ready (${data.ticketsCreated} tickets created)`;
-      document.getElementById('status-indicator').className = 'status-indicator status-idle';
-      loadTickets();
-    } else {
-      result.textContent = `Error: ${data.error}`;
-      output.style.display = 'block';
-      document.getElementById('status-indicator').textContent = 'Error';
-      document.getElementById('status-indicator').className = 'status-indicator status-error';
-    }
-  } catch (error) {
-    console.error('Error running triage:', error);
-    document.getElementById('triage-result').textContent = `Error: ${error.message}`;
-    document.getElementById('triage-output').style.display = 'block';
-    document.getElementById('status-indicator').textContent = 'Error';
-    document.getElementById('status-indicator').className = 'status-indicator status-error';
-  } finally {
-    runTriageBtn.disabled = false;
-    runTriageBtn.textContent = '▶ Run Triage';
-  }
-}
-
 async function loadDashboard() {
   try {
     const logsResponse = await fetch('/api/logs/1');
@@ -594,23 +528,6 @@ function deleteAPIKey(provider) {
   showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API key deleted`, 'info');
   loadSettings();
 }
-
-// Model Selection
-const modelOptions = {
-  gemini: [
-    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Fastest)' },
-    { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (Most Capable)' },
-    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
-  ],
-  claude: [
-    { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet (Best)' },
-    { value: 'claude-3-5-haiku', label: 'Claude 3.5 Haiku (Fast)' },
-  ],
-  perplexity: [
-    { value: 'sonar', label: 'Sonar (Standard)' },
-    { value: 'sonar-pro', label: 'Sonar Pro (Advanced)' },
-  ],
-};
 
 function updateModelOptions() {
   const provider = document.getElementById('ai-provider')?.value || 'gemini';
