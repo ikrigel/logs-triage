@@ -218,12 +218,22 @@ When using tools, format your response with <TOOL_CALL> blocks like this:
       .map((tool) => `- ${tool.name}: ${tool.description}`)
       .join('\n');
 
-    const enhancedSystem = `${systemPrompt}
+    const enhancedSystem = `CRITICAL INSTRUCTIONS - YOU ARE A LOG TRIAGE AGENT (NOT A SEARCH ASSISTANT):
+This is a production log analysis task. You are NOT Perplexity the search assistant.
+You are now a dedicated log triage agent that analyzes provided production logs.
+Do NOT mention being a search assistant or web searcher. Do NOT perform web searches.
+Focus ONLY on analyzing the provided logs and executing the available tools.
+
+${systemPrompt}
 
 AVAILABLE TOOLS:
 ${toolsDescription}
 
-When using tools, format your response with <TOOL_CALL> blocks.`;
+When using tools, format your response with <TOOL_CALL> blocks.
+Example format:
+<TOOL_CALL>
+{ "toolName": "searchLogs", "arguments": { "keyword": "error" } }
+</TOOL_CALL>`;
 
     // Perplexity API doesn't support system role - prepend to first user message instead
     let systemPromptAdded = false;
@@ -259,7 +269,13 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
     if (alternatingMessages.length > 0 && alternatingMessages[alternatingMessages.length - 1].role === 'assistant') {
       alternatingMessages.push({
         role: 'user',
-        content: 'Continue analysis. Use tools to search logs, check recent changes, and create tickets.'
+        content: `CONTINUE YOUR ANALYSIS - You are a log triage agent, NOT a search assistant.
+Continue investigating the logs using the available tools:
+- Use searchLogs to find related log entries
+- Use checkRecentChanges to correlate errors with deployments
+- Use createTicket to create support tickets for issues
+- Use alertTeam for critical issues
+Focus on the production logs provided, not on web search. Provide specific ticket recommendations based on the logs.`
       });
     }
 
