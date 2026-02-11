@@ -240,27 +240,33 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
       return { role, content };
     });
 
-    // Ensure last message is user or tool (Perplexity requirement)
-    const hadTrailingAssistant = messagesForPerplexity.length > 0 &&
-                                  messagesForPerplexity[messagesForPerplexity.length - 1].role === 'assistant';
+    // Perplexity requires strict alternation: user/tool <-> assistant <-> user/tool, etc.
+    // Ensure no consecutive messages with same role
+    const alternatingMessages: Array<{ role: string; content: string }> = [];
+    let lastRole: string | null = null;
 
-    while (messagesForPerplexity.length > 0 &&
-           messagesForPerplexity[messagesForPerplexity.length - 1].role === 'assistant') {
-      messagesForPerplexity.pop();
+    for (const msg of messagesForPerplexity) {
+      // Skip if same role as previous (violates alternation)
+      if (msg.role === lastRole) {
+        console.log(`Skipping consecutive ${msg.role} message to maintain alternation`);
+        continue;
+      }
+      alternatingMessages.push(msg);
+      lastRole = msg.role;
     }
 
-    // If we removed assistant messages, add a continuation prompt so Perplexity stays in context
-    if (hadTrailingAssistant && messagesForPerplexity.length > 0) {
-      messagesForPerplexity.push({
+    // Ensure last message is user or tool (not assistant)
+    if (alternatingMessages.length > 0 && alternatingMessages[alternatingMessages.length - 1].role === 'assistant') {
+      alternatingMessages.push({
         role: 'user',
-        content: 'Continue your analysis and investigation. Use available tools to search logs, check changes, and create tickets for issues found.'
+        content: 'Continue analysis. Use tools to search logs, check recent changes, and create tickets.'
       });
     }
 
     console.log('Perplexity API - Last message role:',
-      messagesForPerplexity[messagesForPerplexity.length - 1]?.role || 'none',
-      'Total messages:', messagesForPerplexity.length,
-      'Had trailing assistant:', hadTrailingAssistant);
+      alternatingMessages[alternatingMessages.length - 1]?.role || 'none',
+      'Total messages:', alternatingMessages.length,
+      'Alternation enforced');
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -270,7 +276,7 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
       },
       body: JSON.stringify({
         model: this.modelName,
-        messages: messagesForPerplexity,
+        messages: alternatingMessages,
         temperature: this.temperature,
         max_tokens: this.maxTokens,
       }),
