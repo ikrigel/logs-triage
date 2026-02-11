@@ -17,7 +17,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.use(helmet());
+// Configure Helmet with relaxed CSP to allow inline scripts and event handlers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+      imgSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "https:", "data:"],
+      formAction: ["'self'"],
+      frameAncestors: ["'self'"],
+    },
+  },
+}));
 app.use(cors());
 app.use(express.json());
 
