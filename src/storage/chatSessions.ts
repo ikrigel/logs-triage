@@ -18,6 +18,7 @@ export interface ChatSession {
   };
   provider: AIProvider;
   model: string;
+  apiKey?: string; // Optional: User's API key for the selected provider
   status: 'active' | 'waiting' | 'completed';
 }
 
@@ -28,6 +29,7 @@ interface CreateSessionOptions {
   source: string;
   provider: AIProvider;
   model: string;
+  apiKey?: string;
 }
 
 export class ChatSessionStorage {
@@ -61,6 +63,7 @@ export class ChatSessionStorage {
       },
       provider: options.provider,
       model: options.model,
+      apiKey: options.apiKey,
       status: 'active',
     };
 

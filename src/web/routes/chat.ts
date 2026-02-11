@@ -93,6 +93,7 @@ chatRouter.post('/:sessionId/message', async (req: Request, res: Response) => {
     const aiService = new AIService({
       provider: session.provider,
       model: session.model,
+      apiKey: session.apiKey,
     });
 
     const agent = new ConversationalAgent(
