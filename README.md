@@ -2,6 +2,8 @@
 
 An intelligent AI-powered system that automatically investigates production logs, identifies issues, correlates them with system changes, and creates actionable support tickets with developer suggestions.
 
+> **Deployment Ready** ✅ All Vercel configuration complete - users provide API keys through Settings UI
+
 ## Features
 
 ✨ **AI-Powered Investigation** - Autonomous agent uses Gemini API to analyze logs
