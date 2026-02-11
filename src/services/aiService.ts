@@ -227,8 +227,8 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
 
     // Perplexity API doesn't support system role - prepend to first user message instead
     let systemPromptAdded = false;
-    const messagesForPerplexity = messages.map((m) => {
-      const role = m.role === 'assistant' ? 'assistant' : 'user';
+    let messagesForPerplexity = messages.map((m) => {
+      const role = m.role === 'assistant' ? 'assistant' : m.role === 'tool' ? 'tool' : 'user';
       let content = m.content;
 
       // Prepend system prompt to the first user message
@@ -239,6 +239,28 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
 
       return { role, content };
     });
+
+    // Ensure last message is user or tool (Perplexity requirement)
+    const hadTrailingAssistant = messagesForPerplexity.length > 0 &&
+                                  messagesForPerplexity[messagesForPerplexity.length - 1].role === 'assistant';
+
+    while (messagesForPerplexity.length > 0 &&
+           messagesForPerplexity[messagesForPerplexity.length - 1].role === 'assistant') {
+      messagesForPerplexity.pop();
+    }
+
+    // If we removed assistant messages, add a continuation prompt so Perplexity stays in context
+    if (hadTrailingAssistant && messagesForPerplexity.length > 0) {
+      messagesForPerplexity.push({
+        role: 'user',
+        content: 'Continue your analysis and investigation. Use available tools to search logs, check changes, and create tickets for issues found.'
+      });
+    }
+
+    console.log('Perplexity API - Last message role:',
+      messagesForPerplexity[messagesForPerplexity.length - 1]?.role || 'none',
+      'Total messages:', messagesForPerplexity.length,
+      'Had trailing assistant:', hadTrailingAssistant);
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
