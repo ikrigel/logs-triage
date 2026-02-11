@@ -141,9 +141,12 @@ export class AgentMemory {
     serializedState: { entries: AgentMemoryEntry[]; approximateTokensUsed: number }
   ): AgentMemory {
     const memory = new AgentMemory(systemPrompt, initialLogs, recentChanges);
-    // Don't initialize again - we'll set state directly
-    memory.entries = serializedState.entries;
-    memory.approximateTokensUsed = serializedState.approximateTokensUsed;
+    // Only overwrite with serialized state if it has entries (subsequent messages)
+    // If empty (first message), keep the initialized state with system prompt + logs context
+    if (serializedState.entries && serializedState.entries.length > 0) {
+      memory.entries = serializedState.entries;
+      memory.approximateTokensUsed = serializedState.approximateTokensUsed;
+    }
     return memory;
   }
 
