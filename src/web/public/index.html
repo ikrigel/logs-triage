@@ -25,6 +25,8 @@
           <li><a href="#" class="nav-link" data-view="tickets">Tickets</a></li>
           <li><a href="#" class="nav-link" data-view="triage">Run Triage</a></li>
           <li><a href="#" class="nav-link" data-view="settings">Settings</a></li>
+          <li><a href="#" class="nav-link" data-view="help">Help & Guide</a></li>
+          <li><a href="#" class="nav-link" data-view="about">About</a></li>
         </ul>
         <div class="sidebar-footer">
           <button id="theme-toggle" class="theme-btn" title="Toggle theme">🌙</button>
@@ -448,6 +450,246 @@
                   <p>Stored securely in session, never logged</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Help & Guide View -->
+        <div id="help-view" class="view">
+          <div class="help-panel">
+            <h3>📚 Help & Guide</h3>
+
+            <div class="help-section">
+              <h4>🎯 Getting Started</h4>
+              <p>The Production Logs Triage application helps you analyze logs, identify issues, and manage support tickets.</p>
+              <ol>
+                <li><strong>View Logs:</strong> Browse production logs from different log sets (1-5) in the Logs section</li>
+                <li><strong>Filter & Search:</strong> Use filters to find specific services, log levels, or keywords</li>
+                <li><strong>Run Triage:</strong> Analyze logs with AI to automatically generate tickets and insights</li>
+                <li><strong>Manage Tickets:</strong> Create, update, and track support tickets</li>
+                <li><strong>Export Data:</strong> Download tickets as JSON for external use</li>
+              </ol>
+            </div>
+
+            <div class="help-section">
+              <h4>📊 Dashboard</h4>
+              <p>The dashboard shows a quick overview of your system:</p>
+              <ul>
+                <li><strong>Total Logs Processed:</strong> Count of all logs analyzed</li>
+                <li><strong>Open Tickets:</strong> Number of unresolved issues</li>
+                <li><strong>Critical Issues:</strong> Count of high-priority tickets</li>
+                <li><strong>Last Updated:</strong> Timestamp of last activity</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>📋 Logs View</h4>
+              <p>Browse and filter production logs:</p>
+              <ul>
+                <li><strong>Log Sets 1-5:</strong> Different production scenarios with increasing complexity</li>
+                <li><strong>Filter by Service:</strong> View logs from specific services</li>
+                <li><strong>Filter by Level:</strong> Show only ERROR, WARN, INFO, or DEBUG messages</li>
+                <li><strong>Keyword Search:</strong> Find specific text in log messages</li>
+                <li><strong>Pagination:</strong> Navigate through large log sets</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>🎫 Tickets</h4>
+              <p>Create and manage support tickets:</p>
+              <ul>
+                <li><strong>Create Manual Tickets:</strong> Add custom tickets with title, description, severity, and affected services</li>
+                <li><strong>View Tickets:</strong> See all tickets with status badges and priority indicators</li>
+                <li><strong>Update Status:</strong> Mark tickets as Open, In Progress, or Closed</li>
+                <li><strong>Add Comments:</strong> Collaborate by adding notes to tickets</li>
+                <li><strong>Bulk Operations:</strong> Select multiple tickets for batch delete or export</li>
+                <li><strong>Export as JSON:</strong> Download selected or all tickets for external use</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>🤖 Run Triage</h4>
+              <p>Use AI to automatically analyze logs and generate insights:</p>
+              <ul>
+                <li><strong>Preset Logs:</strong> Analyze pre-loaded production scenarios (Sets 1-5)</li>
+                <li><strong>File Upload:</strong> Import logs from your machine (.log, .txt, .json, .csv)</li>
+                <li><strong>URL Fetch:</strong> Load logs from a remote URL (HTTP/HTTPS)</li>
+                <li><strong>AI Analysis:</strong> Get automatic ticket generation and root cause suggestions</li>
+                <li><strong>Chat Interface:</strong> See the AI's thinking process in real-time</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>⚙️ Settings</h4>
+              <p>Configure your environment:</p>
+              <ul>
+                <li><strong>API Keys:</strong> Store secure API keys for AI providers (Gemini, Claude, Perplexity)</li>
+                <li><strong>Model Selection:</strong> Choose preferred AI provider and model</li>
+                <li><strong>Provider Status:</strong> Check availability and switch between providers</li>
+                <li><strong>Theme Toggle:</strong> Switch between light and dark modes</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>💡 Tips & Best Practices</h4>
+              <ul>
+                <li>Use filters to focus on specific services or error levels</li>
+                <li>Run triage on manageable log sets for better AI analysis</li>
+                <li>Export tickets regularly for backup and integration with other systems</li>
+                <li>Update ticket statuses to track resolution progress</li>
+                <li>Use appropriate API keys for your region and preferences</li>
+                <li>Check the About page for technology details and support info</li>
+              </ul>
+            </div>
+
+            <div class="help-section">
+              <h4>❓ Frequently Asked Questions</h4>
+              <div class="faq-item">
+                <strong>Q: Which AI provider should I use?</strong>
+                <p>A: Gemini is recommended for speed and reliability. Claude offers advanced reasoning. Perplexity is a good fallback.</p>
+              </div>
+              <div class="faq-item">
+                <strong>Q: Can I import my own logs?</strong>
+                <p>A: Yes! Use File Upload for local files or URL Fetch to load from a web server.</p>
+              </div>
+              <div class="faq-item">
+                <strong>Q: Are my API keys secure?</strong>
+                <p>A: Keys are stored in browser localStorage and never sent to our servers. Handle with care.</p>
+              </div>
+              <div class="faq-item">
+                <strong>Q: Can I export my data?</strong>
+                <p>A: Yes! Export tickets as JSON from the Tickets page for backup or integration.</p>
+              </div>
+              <div class="faq-item">
+                <strong>Q: What log levels are supported?</strong>
+                <p>A: ERROR, WARN, INFO, and DEBUG. Logs are classified based on severity.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About View -->
+        <div id="about-view" class="view">
+          <div class="about-panel">
+            <h3>ℹ️ About</h3>
+
+            <div class="about-section">
+              <h4>About This Application</h4>
+              <p>
+                <strong>Production Logs Triage Agent</strong> is an AI-powered system that automatically investigates
+                production logs, identifies issues, correlates them with system changes, and creates support tickets
+                with developer suggestions.
+              </p>
+              <p>
+                The application combines advanced log analysis, intelligent search capabilities, and modern AI models
+                to help DevOps and SRE teams quickly diagnose and resolve production issues.
+              </p>
+            </div>
+
+            <div class="about-section">
+              <h4>🛠️ Technology Stack</h4>
+              <div class="tech-stack">
+                <div class="tech-category">
+                  <h5>Frontend</h5>
+                  <ul>
+                    <li>HTML5 & CSS3 (Responsive Design)</li>
+                    <li>Vanilla JavaScript (Modern ES6+)</li>
+                    <li>Dark Mode Support</li>
+                    <li>Mobile-First UI</li>
+                  </ul>
+                </div>
+                <div class="tech-category">
+                  <h5>Backend</h5>
+                  <ul>
+                    <li>Node.js with TypeScript</li>
+                    <li>Express.js Web Framework</li>
+                    <li>RESTful API Design</li>
+                    <li>File-based JSON Storage</li>
+                  </ul>
+                </div>
+                <div class="tech-category">
+                  <h5>AI & Analysis</h5>
+                  <ul>
+                    <li>Google Gemini API</li>
+                    <li>Anthropic Claude API</li>
+                    <li>Perplexity AI</li>
+                    <li>Advanced Log Analysis</li>
+                  </ul>
+                </div>
+                <div class="tech-category">
+                  <h5>Deployment</h5>
+                  <ul>
+                    <li>Vercel Serverless Platform</li>
+                    <li>GitHub Version Control</li>
+                    <li>Build Automation</li>
+                    <li>ES Modules Support</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-section">
+              <h4>👨‍💻 Developer</h4>
+              <div class="developer-card">
+                <div class="developer-info">
+                  <h5>Igal Krigel</h5>
+                  <p>Full Stack Developer | DevOps Engineer | AI Integration Specialist</p>
+
+                  <div class="contact-info">
+                    <div class="contact-item">
+                      <span class="contact-label">📧 Email:</span>
+                      <a href="mailto:ikrigel@gmail.com">ikrigel@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                      <span class="contact-label">📱 Phone:</span>
+                      <a href="tel:+972546730401">054-6730401</a>
+                    </div>
+                    <div class="contact-item">
+                      <span class="contact-label">💼 LinkedIn:</span>
+                      <a href="https://www.linkedin.com/in/ikrigel/" target="_blank">linkedin.com/in/ikrigel</a>
+                    </div>
+                    <div class="contact-item">
+                      <span class="contact-label">🐙 GitHub:</span>
+                      <a href="https://github.com/ikrigel" target="_blank">github.com/ikrigel</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-section">
+              <h4>📝 Features</h4>
+              <ul class="feature-list">
+                <li>✅ AI-powered log analysis with multiple model support</li>
+                <li>✅ Advanced filtering and search capabilities</li>
+                <li>✅ Automatic ticket generation from log insights</li>
+                <li>✅ File upload and URL-based log ingestion</li>
+                <li>✅ Bulk ticket operations (delete, export)</li>
+                <li>✅ JSON export for data integration</li>
+                <li>✅ Responsive mobile-friendly design</li>
+                <li>✅ Dark mode support</li>
+                <li>✅ Secure API key management</li>
+                <li>✅ Real-time chat interface for AI interaction</li>
+                <li>✅ Production-ready serverless deployment</li>
+              </ul>
+            </div>
+
+            <div class="about-section">
+              <h4>📄 License & Credits</h4>
+              <p>Built with modern web technologies and best practices for production systems.</p>
+              <p>
+                This application demonstrates integration of multiple AI APIs, advanced filtering systems,
+                and responsive web design patterns suitable for enterprise deployment.
+              </p>
+            </div>
+
+            <div class="about-section">
+              <h4>🔗 Resources</h4>
+              <ul>
+                <li><a href="https://github.com/ikrigel" target="_blank">Developer's GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/ikrigel/" target="_blank">LinkedIn Profile</a></li>
+                <li><a href="mailto:ikrigel@gmail.com">Contact via Email</a></li>
+              </ul>
             </div>
           </div>
         </div>
