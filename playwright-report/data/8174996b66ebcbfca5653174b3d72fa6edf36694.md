@@ -1,0 +1,58 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e18] [cursor=pointer]
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - button "☰" [ref=e21] [cursor=pointer]
+      - heading "Dashboard" [level=2] [ref=e22]
+      - generic [ref=e24]: Ready
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - heading "Total Logs Processed" [level=3] [ref=e28]
+          - paragraph [ref=e29]: "28"
+        - generic [ref=e30]:
+          - heading "Open Tickets" [level=3] [ref=e31]
+          - paragraph [ref=e32]: "0"
+        - generic [ref=e33]:
+          - heading "Critical Issues" [level=3] [ref=e34]
+          - paragraph [ref=e35]: "0"
+        - generic [ref=e36]:
+          - heading "Last Updated" [level=3] [ref=e37]
+          - paragraph [ref=e38]: 8:30:56 AM
+      - generic [ref=e39]:
+        - heading "Quick Actions" [level=3] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - heading "Run Triage" [level=4] [ref=e43]
+            - paragraph [ref=e44]: Analyze logs and generate tickets
+            - button "Go to Triage" [ref=e45] [cursor=pointer]
+          - generic [ref=e46]:
+            - heading "View Logs" [level=4] [ref=e47]
+            - paragraph [ref=e48]: Browse and filter production logs
+            - button "Go to Logs" [ref=e49] [cursor=pointer]
+          - generic [ref=e50]:
+            - heading "Manage Tickets" [level=4] [ref=e51]
+            - paragraph [ref=e52]: Create and update support tickets
+            - button "Go to Tickets" [ref=e53] [cursor=pointer]
+```
