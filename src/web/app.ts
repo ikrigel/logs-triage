@@ -275,16 +275,13 @@ app.get('/api/tickets/:id/close', async (req: Request, res: Response) => {
 
 app.get('/api/settings', (req: Request, res: Response) => {
   try {
-    const provider = process.env.AI_PROVIDER || 'gemini';
-    const hasGeminiKey = !!process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    const hasPerplexityKey =
-      !!process.env.PERPLEXITY_API_KEY || !!process.env.perplexity_api_key;
-
+    // API keys are provided by users through the Settings UI (localStorage)
+    // All providers are available for configuration; actual availability checked at runtime
     res.json({
-      currentProvider: provider,
+      currentProvider: 'gemini',
       availableProviders: {
-        gemini: { name: 'Gemini 2.0 Flash', available: hasGeminiKey },
-        perplexity: { name: 'Perplexity Sonar', available: hasPerplexityKey },
+        gemini: { name: 'Gemini 2.0 Flash', available: true },
+        perplexity: { name: 'Perplexity Sonar', available: true },
       },
     });
   } catch (error) {
