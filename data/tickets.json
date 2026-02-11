@@ -1,0 +1,278 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-02-11T16:21:33.772Z",
+  "tickets": [
+    {
+      "title": "Zendesk Token Expiration Causing Enrichment Failures in batch_20250117_A",
+      "description": "Multiple ERROR logs in enrichment-service for batch_20250117_A (times 13:43-13:59) with 'Failed to enrich user data'. Root cause: Repeated 'Zendesk token expired' ERRORs in source-connector (e.g., 12:12, 12:37, 13:06). Affects Zendesk-sourced users including user_42891, user_73521, user_91033, user_67234, user_81920. No recent system changes detected. Developer suggestions: 1) Implement automatic token refresh in source-connector using Zendesk API token auth (requires admin email + token; enable Token Access in Zendesk settings). 2) Add retry logic with exponential backoff for 401 errors. 3) Monitor token expiry proactively and alert before failure. 4) Verify token scopes for required endpoints.",
+      "severity": "high",
+      "affectedServices": [
+        "enrichment-service",
+        "source-connector"
+      ],
+      "relatedLogs": [
+        {
+          "time": "13:22:45",
+          "service": "source-connector",
+          "level": "INFO",
+          "msg": "Connector heartbeat OK",
+          "source_id": "zendesk"
+        },
+        {
+          "time": "13:26:53",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_42891",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:31:02",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_73521",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:35:10",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_91033",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:39:18",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_67234",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:43:26",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:47:35",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:51:43",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:55:51",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:59:59",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        }
+      ],
+      "suggestions": [],
+      "status": "open",
+      "comments": [],
+      "id": "TKT-1770825647531-85fkny7i7",
+      "createdAt": "2026-02-11T16:00:47.531Z",
+      "updatedAt": "2026-02-11T16:00:47.531Z"
+    },
+    {
+      "title": "Zendesk Token Expiration Causing Enrichment Failures in batch_20250117_A",
+      "description": "Multiple ERROR logs in enrichment-service for batch_20250117_A (times 13:43-13:59) with 'Failed to enrich user data'. Root cause: Repeated 'Zendesk token expired' ERRORs in source-connector (e.g., 12:12, 12:37, 13:06 UTC). Affects Zendesk-sourced users including user_42891, user_73521, user_91033, user_67234, user_81920. No recent system changes detected that correlate with onset. \n\nDeveloper suggestions: \n1. Implement automatic token refresh/rotation in source-connector Zendesk integration. Zendesk API tokens (requiring admin email + token, with Token Access enabled in Zendesk Admin Center > Apps and integrations > APIs > Zendesk API) do not auto-refresh; handle expiry proactively.[1][2][7]\n2. Add retry logic with exponential backoff specifically for 401 Unauthorized errors (common Zendesk token issue).[1]\n3. Verify token scopes cover required user data endpoints (e.g., /api/v2/users) and regenerate if malformed/revoked.[1][5]\n4. Add monitoring/alerting for token expiry (e.g., check remaining TTL if exposed) to prevent batch impacts.\n5. Consider OAuth 2.0 if not already in use, for better token management.[7]",
+      "severity": "high",
+      "affectedServices": [
+        "enrichment-service",
+        "source-connector"
+      ],
+      "relatedLogs": [
+        {
+          "time": "13:22:45",
+          "service": "source-connector",
+          "level": "INFO",
+          "msg": "Connector heartbeat OK",
+          "source_id": "zendesk"
+        },
+        {
+          "time": "13:26:53",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_42891",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:31:02",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_73521",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:35:10",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_91033",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:39:18",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_67234",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:43:26",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:47:35",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:51:43",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:55:51",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:59:59",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        }
+      ],
+      "suggestions": [],
+      "status": "open",
+      "comments": [],
+      "id": "TKT-1770825654326-zv7bwmkvf",
+      "createdAt": "2026-02-11T16:00:54.326Z",
+      "updatedAt": "2026-02-11T16:00:54.326Z"
+    },
+    {
+      "title": "Systematic batch enrichment failures for batch_20250117_A",
+      "description": "5x identical ERRORs from enrichment-service all tied to batch_20250117_A. Likely Zendesk source integration failure. No recent deployments correlate.",
+      "severity": "high",
+      "affectedServices": [
+        "enrichment-service"
+      ],
+      "relatedLogs": [
+        {
+          "time": "13:22:45",
+          "service": "source-connector",
+          "level": "INFO",
+          "msg": "Connector heartbeat OK",
+          "source_id": "zendesk"
+        },
+        {
+          "time": "13:26:53",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_42891",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:31:02",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_73521",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:35:10",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_91033",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:39:18",
+          "service": "enrichment-service",
+          "level": "INFO",
+          "msg": "User enrichment completed with errors for user.",
+          "user_id": "user_67234",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:43:26",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:47:35",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:51:43",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:55:51",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        },
+        {
+          "time": "13:59:59",
+          "service": "enrichment-service",
+          "level": "ERROR",
+          "msg": "Failed to enrich user data",
+          "batch_id": "batch_20250117_A"
+        }
+      ],
+      "suggestions": [],
+      "status": "open",
+      "comments": [],
+      "id": "TKT-1770826893772-x5u4bz94f",
+      "createdAt": "2026-02-11T16:21:33.772Z",
+      "updatedAt": "2026-02-11T16:21:33.772Z"
+    }
+  ]
+}
