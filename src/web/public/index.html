@@ -243,7 +243,10 @@
           <!-- Session Info Panel (shown during conversation) -->
           <div id="session-info" class="session-info" style="display: none;">
             <span id="session-logs-info" title="Number of logs loaded from the selected source">No logs loaded</span>
-            <button onclick="endSession()" class="btn btn-small" title="End the conversation and return to log selection">End Conversation</button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button id="run-auto-triage-btn" class="btn btn-small btn-secondary" onclick="runAutoTriageFromChat()" title="Run autonomous triage on current logs (1-10 iterations) - keeps chat open">🚀 Auto Triage</button>
+              <button onclick="endSession()" class="btn btn-small" title="End the conversation and return to log selection">End Conversation</button>
+            </div>
           </div>
 
           <div class="chat-container">

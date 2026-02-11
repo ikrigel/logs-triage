@@ -1056,6 +1056,81 @@ async function fetchLogsFromURL() {
   }
 }
 
+async function runAutoTriageFromChat() {
+  if (!sessionLogs) {
+    addMessageToChat('⚠️ No logs loaded in current session', 'system-message');
+    return;
+  }
+
+  const btn = document.getElementById('run-auto-triage-btn');
+  btn.disabled = true;
+
+  try {
+    // Determine log set number from session logs info
+    // sessionLogs.source is like "log_set_1"
+    let logSetNumber = null;
+    if (sessionLogs.source && sessionLogs.source.startsWith('log_set_')) {
+      logSetNumber = parseInt(sessionLogs.source.replace('log_set_', ''));
+    }
+
+    if (!logSetNumber) {
+      addMessageToChat('⚠️ Can only run auto triage on preset log sets', 'system-message');
+      btn.disabled = false;
+      return;
+    }
+
+    addMessageToChat(`🚀 Running autonomous triage analysis on ${sessionLogs.count} logs...`, 'user');
+    showThinkingIndicator();
+
+    const provider = localStorage.getItem('ai_provider') || 'gemini';
+    const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
+    const apiKey = localStorage.getItem(`${provider}_api_key`);
+
+    const response = await fetch('/api/triage/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        logSetNumber,
+        provider,
+        model,
+        apiKey,
+      }),
+    });
+
+    hideThinkingIndicator();
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Triage failed');
+    }
+
+    const data = await response.json();
+
+    addMessageToChat(`✅ Triage analysis complete!`, 'system-message');
+
+    if (data.ticketsCreated > 0) {
+      addMessageToChat(`🎫 Created ${data.ticketsCreated} ticket(s) from the investigation.`, 'system-message');
+
+      // Show ticket summary
+      if (data.tickets && data.tickets.length > 0) {
+        let summary = '**Tickets Created:**\n';
+        data.tickets.forEach((ticket, i) => {
+          summary += `${i + 1}. ${ticket.title} (${ticket.severity})\n`;
+        });
+        addMessageToChat(summary, 'assistant');
+      }
+    } else {
+      addMessageToChat('No issues requiring tickets were found.', 'assistant');
+    }
+
+  } catch (error) {
+    hideThinkingIndicator();
+    addMessageToChat(`❌ Auto triage error: ${error.message}`, 'system-message');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 async function startTriage() {
   const btn = document.getElementById('start-triage-btn');
   btn.disabled = true;
