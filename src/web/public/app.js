@@ -557,10 +557,19 @@ function saveAPIKeys() {
   const perplexityKey = document.getElementById('perplexity-key')?.value || '';
   const claudeKey = document.getElementById('claude-key')?.value || '';
 
+  // Debug logging
+  console.log('Save API Keys called');
+  console.log('Gemini key length:', geminiKey.length);
+  console.log('Claude key length:', claudeKey.length);
+  console.log('Perplexity key length:', perplexityKey.length);
+
   // Save all keys to localStorage so they persist across sessions
   localStorage.setItem('gemini_api_key', geminiKey);
   localStorage.setItem('perplexity_api_key', perplexityKey);
   localStorage.setItem('claude_api_key', claudeKey);
+
+  console.log('Keys saved to localStorage');
+  console.log('Verified gemini_api_key:', localStorage.getItem('gemini_api_key')?.substring(0, 5) + '...');
 
   // Also save the current provider and model selection
   const provider = document.getElementById('ai-provider')?.value || 'gemini';
