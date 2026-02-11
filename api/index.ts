@@ -31,14 +31,16 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the public directory
-const publicPath = path.join(__dirname, '..', 'src', 'web', 'public');
+// Use compiled dist path in Vercel serverless environment
+const publicPath = path.join(__dirname, '..', 'dist', 'src', 'web', 'public');
 app.use(express.static(publicPath));
 
-// Import all API routes
-import { loadLogs, loadRecentChanges } from '../src/services/logsAndChangesService';
-import { TicketStorage } from '../src/storage/tickets';
-import { LogTriageAgent } from '../src/agent';
-import { filterLogs, filterTickets } from '../src/utils/filter';
+// Import all API routes from compiled dist folder
+// In Vercel serverless, imports need to reference the compiled JavaScript output
+import { loadLogs, loadRecentChanges } from '../dist/src/services/logsAndChangesService.js';
+import { TicketStorage } from '../dist/src/storage/tickets.js';
+import { LogTriageAgent } from '../dist/src/agent/index.js';
+import { filterLogs, filterTickets } from '../dist/src/utils/filter.js';
 
 const ticketStorage = new TicketStorage();
 let agentRunning = false;
