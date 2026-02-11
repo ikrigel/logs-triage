@@ -225,6 +225,21 @@ ${toolsDescription}
 
 When using tools, format your response with <TOOL_CALL> blocks.`;
 
+    // Perplexity API doesn't support system role - prepend to first user message instead
+    let systemPromptAdded = false;
+    const messagesForPerplexity = messages.map((m) => {
+      const role = m.role === 'assistant' ? 'assistant' : 'user';
+      let content = m.content;
+
+      // Prepend system prompt to the first user message
+      if (role === 'user' && !systemPromptAdded) {
+        content = `${enhancedSystem}\n\n${m.content}`;
+        systemPromptAdded = true;
+      }
+
+      return { role, content };
+    });
+
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
@@ -233,13 +248,7 @@ When using tools, format your response with <TOOL_CALL> blocks.`;
       },
       body: JSON.stringify({
         model: this.modelName,
-        messages: [
-          { role: 'system', content: enhancedSystem },
-          ...messages.map((m) => ({
-            role: m.role === 'assistant' ? 'assistant' : 'user',
-            content: m.content,
-          })),
-        ],
+        messages: messagesForPerplexity,
         temperature: this.temperature,
         max_tokens: this.maxTokens,
       }),
