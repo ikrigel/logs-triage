@@ -1,22 +1,5 @@
 {
-  "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "GOOGLE_GENERATIVE_AI_API_KEY": "@GOOGLE_GENERATIVE_AI_API_KEY"
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/src/web/app.ts"
-    },
-    {
-      "src": "/public/(.*)",
-      "dest": "/src/web/public/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/src/web/app.ts"
-    }
-  ]
+  "env": []
 }
