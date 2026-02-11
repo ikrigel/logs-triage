@@ -429,9 +429,14 @@ app.post('/api/settings/provider', (req: Request, res: Response) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-  console.log(`Open http://localhost:${port} in your browser`);
-});
+// Only start the server if not in a serverless environment
+// Vercel (and other serverless platforms) set VERCEL=1
+// When imported as a module, we don't call listen()
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(`Open http://localhost:${port} in your browser`);
+  });
+}
 
 export default app;
