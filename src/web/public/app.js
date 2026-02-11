@@ -14,6 +14,9 @@ const state = {
   },
 };
 
+// Chat interface state
+let currentLogSource = 'preset';
+
 // DOM Elements
 const navLinks = document.querySelectorAll('.nav-link');
 const views = document.querySelectorAll('.view');
@@ -672,8 +675,6 @@ function switchToProvider(provider) {
 }
 
 // ===== CHAT INTERFACE FUNCTIONS =====
-
-let currentLogSource = 'preset';
 
 function switchLogSource(source) {
   currentLogSource = source;
