@@ -32,28 +32,23 @@ export class AIService {
 
     if (provider === 'gemini') {
       const apiKey = config.apiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-      if (!apiKey) {
-        throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not set in environment');
-      }
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
-      this.apiKey = apiKey;
+      this.apiKey = apiKey || '';
       this.modelName = config.model || 'gemini-2.0-flash';
-      this.model = google(this.modelName);
+      if (apiKey) {
+        process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+        this.model = google(this.modelName);
+      }
     } else if (provider === 'claude') {
       const apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY || (process.env as any).claude_api_key;
-      if (!apiKey) {
-        throw new Error('ANTHROPIC_API_KEY not set in environment');
-      }
-      process.env.ANTHROPIC_API_KEY = apiKey;
-      this.apiKey = apiKey;
+      this.apiKey = apiKey || '';
       this.modelName = config.model || 'claude-3-5-sonnet';
-      this.model = anthropic(this.modelName);
+      if (apiKey) {
+        process.env.ANTHROPIC_API_KEY = apiKey;
+        this.model = anthropic(this.modelName);
+      }
     } else if (provider === 'perplexity') {
       const apiKey = config.apiKey || process.env.PERPLEXITY_API_KEY || (process.env as any).perplexity_api_key;
-      if (!apiKey) {
-        throw new Error('PERPLEXITY_API_KEY not set in environment');
-      }
-      this.apiKey = apiKey;
+      this.apiKey = apiKey || '';
       this.modelName = config.model || 'sonar';
     } else {
       throw new Error(`Unsupported AI provider: ${provider}`);
@@ -68,6 +63,16 @@ export class AIService {
     toolCalls?: Array<{ toolName: string; arguments: Record<string, any> }>;
     stop_reason?: string;
   }> {
+    // Validate API key is available
+    if (!this.apiKey) {
+      const keyName = this.provider === 'gemini' ? 'GOOGLE_GENERATIVE_AI_API_KEY' :
+                      this.provider === 'claude' ? 'ANTHROPIC_API_KEY' :
+                      'PERPLEXITY_API_KEY';
+      throw new Error(
+        `No ${this.provider} API key configured. Please add your API key in Settings to use ${this.provider}.`
+      );
+    }
+
     try {
       if (this.provider === 'perplexity') {
         return await this.callPerplexity(systemPrompt, messages);
