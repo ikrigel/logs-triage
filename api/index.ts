@@ -51,6 +51,11 @@ app.get('/api/health', (req: VercelRequest, res: VercelResponse) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Favicon handler (return 204 No Content)
+app.get('/favicon.ico', (req: VercelRequest, res: VercelResponse) => {
+  res.status(204).end();
+});
+
 // Get available log sets
 app.get('/api/logs', async (req: VercelRequest, res: VercelResponse) => {
   try {
