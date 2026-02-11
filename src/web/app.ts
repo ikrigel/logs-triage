@@ -103,6 +103,7 @@ app.get('/api/logs/:setNumber', async (req: Request, res: Response) => {
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
+    console.error('Error loading logs:', error);
     res.status(500).json({ error: `Failed to load logs: ${msg}` });
   }
 });
