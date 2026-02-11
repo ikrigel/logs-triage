@@ -4,12 +4,12 @@ import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { loadLogs, loadRecentChanges } from '../services/logsAndChangesService';
-import { TicketStorage } from '../storage/tickets';
-import { TicketService } from '../services/ticketService';
-import { LogTriageAgent } from '../agent';
-import { filterLogs, filterTickets } from '../utils/filter';
-import { AIService, AIProvider } from '../services/aiService';
+import { loadLogs, loadRecentChanges } from '../services/logsAndChangesService.js';
+import { TicketStorage } from '../storage/tickets.js';
+import { TicketService } from '../services/ticketService.js';
+import { LogTriageAgent } from '../agent/index.js';
+import { filterLogs, filterTickets } from '../utils/filter.js';
+import { AIService, AIProvider } from '../services/aiService.js';
 
 dotenv.config();
 
