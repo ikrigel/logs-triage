@@ -16,9 +16,16 @@ export class TicketStorage {
     try {
       await this.ensureDirectory();
       await this.load();
+      console.log(`[TicketStorage] Initialized with ${this.data.tickets.length} existing tickets`);
+      // load() already handles missing file by setting this.data = EMPTY_STORAGE
+      // We don't save here to avoid overwriting existing tickets on first run
     } catch (error) {
-      this.data = EMPTY_STORAGE;
-      await this.save();
+      console.error(`[TicketStorage] Error during initialization:`, error);
+      // If there's still an error, use empty storage in memory
+      // but don't persist it - only save when explicitly creating/modifying tickets
+      if (!this.data || !this.data.tickets) {
+        this.data = EMPTY_STORAGE;
+      }
     }
   }
 
@@ -117,9 +124,19 @@ export class TicketStorage {
     try {
       const content = await fs.readFile(this.filePath, 'utf-8');
       const parsed = JSON.parse(content);
-      this.data = parsed;
-    } catch {
-      this.data = EMPTY_STORAGE;
+      // Validate that parsed data has the required structure
+      if (parsed && parsed.tickets && Array.isArray(parsed.tickets)) {
+        this.data = parsed;
+      } else {
+        // If file exists but is invalid, don't overwrite - just use empty
+        this.data = EMPTY_STORAGE;
+      }
+    } catch (error) {
+      // File doesn't exist or other read error - use empty storage but don't clear
+      // (this preserves in-memory data if it exists)
+      if (!this.data || !this.data.tickets) {
+        this.data = EMPTY_STORAGE;
+      }
     }
   }
 
