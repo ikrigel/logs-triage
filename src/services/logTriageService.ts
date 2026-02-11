@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { LogTriageAgent } from '../agent/index.js';
 import { loadLogs, loadRecentChanges } from './logsAndChangesService.js';
-import { TicketStorage } from '../storage/tickets.js';
+import { ticketStorage } from '../storage/tickets.js';
 
 dotenv.config();
 
@@ -13,15 +13,14 @@ const activateLogTriageAgent = async (): Promise<string> => {
     const recentChanges = await loadRecentChanges(LOG_FILE_NUMBER);
     const lastFiveLogs = allLogs.slice(-5);
 
-    const storage = new TicketStorage();
-    await storage.initialize();
+    await ticketStorage.initialize();
 
     const agent = new LogTriageAgent(
       LOG_FILE_NUMBER,
       lastFiveLogs,
       allLogs,
       recentChanges,
-      storage
+      ticketStorage
     );
 
     const answer = await agent.run();

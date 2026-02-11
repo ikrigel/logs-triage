@@ -4,12 +4,10 @@ import { ConversationalAgent } from '../../agent/conversationalAgent.js';
 import { AgentMemory } from '../../agent/memory.js';
 import { AIService } from '../../services/aiService.js';
 import { TicketService } from '../../services/ticketService.js';
-import { TicketStorage } from '../../storage/tickets.js';
+import { ticketStorage } from '../../storage/tickets.js';
 import { loadLogs, loadRecentChanges } from '../../services/logsAndChangesService.js';
 
 export const chatRouter = Router();
-
-const ticketStorage = new TicketStorage();
 
 // POST /api/chat/start - Start new conversation session
 chatRouter.post('/start', async (req: Request, res: Response) => {

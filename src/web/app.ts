@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { loadLogs, loadRecentChanges } from '../services/logsAndChangesService.js';
-import { TicketStorage } from '../storage/tickets.js';
+import { ticketStorage } from '../storage/tickets.js';
 import { TicketService } from '../services/ticketService.js';
 import { LogTriageAgent } from '../agent/index.js';
 import { filterLogs, filterTickets } from '../utils/filter.js';
@@ -39,7 +39,6 @@ app.use(express.json());
 // Mount chat router for conversational mode
 app.use('/api/chat', chatRouter);
 
-const ticketStorage = new TicketStorage();
 const ticketService = new TicketService(ticketStorage);
 
 let agentRunning = false;

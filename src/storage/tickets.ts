@@ -167,3 +167,7 @@ export class TicketStorage {
     await this.save();
   }
 }
+
+// Export singleton instance to ensure all modules share the same TicketStorage
+// This prevents race conditions from multiple instances overwriting each other
+export const ticketStorage = new TicketStorage();
