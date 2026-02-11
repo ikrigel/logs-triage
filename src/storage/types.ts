@@ -1,4 +1,4 @@
-import { Ticket } from '../agent/types';
+import { Ticket } from '../agent/types.js';
 
 export interface StorageOptions {
   filePath?: string;

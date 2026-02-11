@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { searchLogs, extractErrorContext } from '../../tools/searchLogs';
-import { LogEntry } from '../../agent/types';
+import { searchLogs, extractErrorContext } from '../../tools/searchLogs.js';
+import { LogEntry } from '../../agent/types.js';
 
 const mockLogs: LogEntry[] = [
   {

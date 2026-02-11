@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { LogEntry } from '../agent/types';
+import { LogEntry } from '../agent/types.js';
 
 export interface AlertInput {
   severity: 'low' | 'medium' | 'high' | 'critical';

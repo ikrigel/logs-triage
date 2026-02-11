@@ -1,12 +1,12 @@
-import { LogEntry, InvestigationResult, RecentChanges } from './types';
-import { deepDelete } from '../utils/general';
+import { LogEntry, InvestigationResult, RecentChanges } from './types.js';
+import { deepDelete } from '../utils/general.js';
 import chalk from 'chalk';
-import { AgentMemory } from './memory';
-import { AIService } from '../services/aiService';
-import { TicketService } from '../services/ticketService';
-import { TicketStorage } from '../storage/tickets';
-import { executeTool } from '../tools';
-import { loadRecentChanges } from '../services/logsAndChangesService';
+import { AgentMemory } from './memory.js';
+import { AIService } from '../services/aiService.js';
+import { TicketService } from '../services/ticketService.js';
+import { TicketStorage } from '../storage/tickets.js';
+import { executeTool } from '../tools/index.js';
+import { loadRecentChanges } from '../services/logsAndChangesService.js';
 
 export class LogTriageAgent {
   private memory: AgentMemory;

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { LogTriageAgent } from '../agent';
-import { loadLogs, loadRecentChanges } from './logsAndChangesService';
-import { TicketStorage } from '../storage/tickets';
+import { LogTriageAgent } from '../agent/index.js';
+import { loadLogs, loadRecentChanges } from './logsAndChangesService.js';
+import { TicketStorage } from '../storage/tickets.js';
 
 dotenv.config();
 

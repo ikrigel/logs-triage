@@ -1,4 +1,4 @@
-import { LogEntry, Ticket } from '../agent/types';
+import { LogEntry, Ticket } from '../agent/types.js';
 
 export interface LogFilterOptions {
   services?: string[];

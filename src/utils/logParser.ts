@@ -1,4 +1,4 @@
-import { LogEntry } from '../agent/types';
+import { LogEntry } from '../agent/types.js';
 
 export interface LogStatistics {
   total: number;

@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
 import { generateText, LanguageModel } from 'ai';
-import { toolDefinitions } from '../tools';
+import { toolDefinitions } from '../tools/index.js';
 
 export type AIProvider = 'gemini' | 'perplexity' | 'claude';
 

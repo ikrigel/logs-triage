@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { checkRecentChanges, suggestCorrelation } from '../../tools/checkRecentChanges';
-import { LogEntry, RecentChanges } from '../../agent/types';
+import { checkRecentChanges, suggestCorrelation } from '../../tools/checkRecentChanges.js';
+import { LogEntry, RecentChanges } from '../../agent/types.js';
 
 const mockChanges: RecentChanges[] = [
   {

@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { Ticket } from '../agent/types';
-import { StorageData, EMPTY_STORAGE, TicketFilter, StorageOptions } from './types';
+import { Ticket } from '../agent/types.js';
+import { StorageData, EMPTY_STORAGE, TicketFilter, StorageOptions } from './types.js';
 
 export class TicketStorage {
   private filePath: string;

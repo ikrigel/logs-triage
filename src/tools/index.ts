@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { searchLogs, SearchLogsInput } from './searchLogs';
-import { checkRecentChanges, CheckChangesInput } from './checkRecentChanges';
-import { createTicket, CreateTicketInput } from './createTicket';
-import { alertTeam, AlertInput } from './alertTeam';
-import { LogEntry, RecentChanges } from '../agent/types';
-import { TicketStorage } from '../storage/tickets';
+import { searchLogs, SearchLogsInput } from './searchLogs.js';
+import { checkRecentChanges, CheckChangesInput } from './checkRecentChanges.js';
+import { createTicket, CreateTicketInput } from './createTicket.js';
+import { alertTeam, AlertInput } from './alertTeam.js';
+import { LogEntry, RecentChanges } from '../agent/types.js';
+import { TicketStorage } from '../storage/tickets.js';
 
 // Zod schemas for validation (used for both LLM and input validation)
 const SearchLogsSchema = z.object({

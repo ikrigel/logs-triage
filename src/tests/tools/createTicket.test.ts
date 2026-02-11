@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { generateTicketFromLogs } from '../../tools/createTicket';
-import { LogEntry } from '../../agent/types';
+import { generateTicketFromLogs } from '../../tools/createTicket.js';
+import { LogEntry } from '../../agent/types.js';
 
 const mockErrorLogs: LogEntry[] = [
   {

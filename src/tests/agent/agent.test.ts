@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { LogTriageAgent } from '../../agent';
-import { TicketStorage } from '../../storage/tickets';
-import { LogEntry, RecentChanges } from '../../agent/types';
+import { LogTriageAgent } from '../../agent.js';
+import { TicketStorage } from '../../storage/tickets.js';
+import { LogEntry, RecentChanges } from '../../agent/types.js';
 
 const mockLogs: LogEntry[] = [
   {

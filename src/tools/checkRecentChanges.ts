@@ -1,4 +1,4 @@
-import { RecentChanges, LogEntry } from '../agent/types';
+import { RecentChanges, LogEntry } from '../agent/types.js';
 
 export interface CheckChangesInput {
   timeRangeStart?: string;

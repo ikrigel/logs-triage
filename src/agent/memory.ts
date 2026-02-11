@@ -1,4 +1,4 @@
-import { AgentMemoryEntry, ToolResult, LogEntry, RecentChanges } from './types';
+import { AgentMemoryEntry, ToolResult, LogEntry, RecentChanges } from './types.js';
 
 export class AgentMemory {
   private entries: AgentMemoryEntry[] = [];

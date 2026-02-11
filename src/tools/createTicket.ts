@@ -1,5 +1,5 @@
-import { Ticket, LogEntry } from '../agent/types';
-import { TicketStorage } from '../storage/tickets';
+import { Ticket, LogEntry } from '../agent/types.js';
+import { TicketStorage } from '../storage/tickets.js';
 
 export interface CreateTicketInput {
   title: string;

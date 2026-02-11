@@ -1,6 +1,6 @@
-import { Ticket, Comment } from '../agent/types';
-import { TicketStorage } from '../storage/tickets';
-import { TicketFilter } from '../storage/types';
+import { Ticket, Comment } from '../agent/types.js';
+import { TicketStorage } from '../storage/tickets.js';
+import { TicketFilter } from '../storage/types.js';
 
 export class TicketService {
   constructor(private storage: TicketStorage) {}
