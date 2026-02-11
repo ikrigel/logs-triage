@@ -600,9 +600,8 @@ const modelOptions = {
     { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
   ],
   claude: [
-    { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus (Most Capable)' },
-    { value: 'claude-3-sonnet-20240229', label: 'Claude 3 Sonnet (Balanced)' },
-    { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku (Fastest)' },
+    { value: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet (Best)' },
+    { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Fast)' },
   ],
   perplexity: [
     { value: 'sonar', label: 'Sonar (Standard)' },
