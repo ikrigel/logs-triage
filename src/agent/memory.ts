@@ -124,4 +124,37 @@ export class AgentMemory {
     this.approximateTokensUsed = 0;
     this.initializeMemory();
   }
+
+  // Serialize memory state for session persistence
+  serialize(): { entries: AgentMemoryEntry[]; approximateTokensUsed: number } {
+    return {
+      entries: this.entries,
+      approximateTokensUsed: this.approximateTokensUsed,
+    };
+  }
+
+  // Restore memory from serialized state
+  static restore(
+    systemPrompt: string,
+    initialLogs: LogEntry[],
+    recentChanges: RecentChanges[],
+    serializedState: { entries: AgentMemoryEntry[]; approximateTokensUsed: number }
+  ): AgentMemory {
+    const memory = new AgentMemory(systemPrompt, initialLogs, recentChanges);
+    // Don't initialize again - we'll set state directly
+    memory.entries = serializedState.entries;
+    memory.approximateTokensUsed = serializedState.approximateTokensUsed;
+    return memory;
+  }
+
+  // Add user message directly (for conversational mode)
+  addUserMessage(content: string): void {
+    this.entries.push({
+      role: 'user',
+      content,
+      timestamp: new Date().toISOString(),
+    });
+    this.approximateTokensUsed += this.estimateTokens(content);
+    this.checkAndCompressMemory();
+  }
 }

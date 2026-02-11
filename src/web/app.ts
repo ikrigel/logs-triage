@@ -10,6 +10,7 @@ import { TicketService } from '../services/ticketService.js';
 import { LogTriageAgent } from '../agent/index.js';
 import { filterLogs, filterTickets } from '../utils/filter.js';
 import { AIService, AIProvider } from '../services/aiService.js';
+import { chatRouter } from './routes/chat.js';
 
 dotenv.config();
 
@@ -34,6 +35,9 @@ app.use(helmet({
 }));
 app.use(cors());
 app.use(express.json());
+
+// Mount chat router for conversational mode
+app.use('/api/chat', chatRouter);
 
 const ticketStorage = new TicketStorage();
 const ticketService = new TicketService(ticketStorage);

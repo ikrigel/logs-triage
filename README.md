@@ -6,13 +6,23 @@ An intelligent AI-powered system that automatically investigates production logs
 
 ## Features
 
-✨ **AI-Powered Investigation** - Autonomous agent uses Gemini API to analyze logs
+### Autonomous Investigation Mode
+✨ **AI-Powered Investigation** - Autonomous agent uses Gemini/Claude/Perplexity to analyze logs
 🔍 **Deep Recursive Search** - Find related logs across batch IDs, user IDs, and source IDs
 🔗 **Change Correlation** - Link errors to deployments and configuration changes
 🎫 **Ticket Generation** - Auto-create support tickets with intelligent suggestions
+
+### Interactive Conversational Mode ✨ NEW
+💬 **Multi-turn Chat** - Have back-and-forth conversations with the AI agent
+🛠️ **Dynamic Tool Usage** - Agent uses tools (search, create tickets, alerts) during conversation
+📝 **Persistent Sessions** - Conversation state preserved across multiple turns
+👁️ **Tool Visibility** - See exactly what the agent is doing in real-time
+
+### Platform Features
 💾 **Local Storage** - JSON-based persistent ticket management
-📊 **Web Dashboard** - Modern UI for visualization and management
+📊 **Web Dashboard** - Modern UI with dark mode support
 ⚡ **RESTful API** - Full-featured API for programmatic access
+🔐 **Multi-Provider** - Support for Gemini, Claude, and Perplexity APIs
 
 ## Quick Start
 
@@ -50,6 +60,47 @@ npm run server
 npm test
 ```
 
+## Two Modes of Operation
+
+### 1. **Run Auto Triage** (Autonomous Mode)
+Automated investigation without user interaction:
+- Click **"Run Auto Triage"** button
+- Agent investigates logs 1-10 iterations automatically
+- Creates tickets and alerts based on findings
+- Perfect for: Quick automated analysis, batch processing
+
+**Use Cases:**
+- Initial log scan to identify issues
+- Overnight automated triage
+- Integration with monitoring systems
+
+### 2. **Start Conversation** (Interactive Mode) ✨ NEW
+Have a dialogue with the AI agent:
+- Click **"Start Conversation"** button
+- Type questions: *"What errors are in the logs?"*, *"Search for connection issues"*
+- Agent responds conversationally and uses tools as needed
+- Ask follow-up questions to steer investigation
+- Perfect for: Guided investigation, learning, deep debugging
+
+**Conversation Features:**
+- **Multi-turn Context** - Agent remembers previous messages
+- **Tool Visibility** - See what tools are being executed
+- **Natural Language** - Ask questions in plain English
+- **Persistent Sessions** - Conversation state saved across turns
+- **Dynamic Tool Usage** - Agent decides when to search/create tickets
+
+**Example Conversation:**
+```
+You: "What's happening in these logs?"
+Agent: [Analyzes logs] "I see warnings about connection pool exhaustion..."
+
+You: "Search for related errors"
+Agent: [Uses search_logs tool] "Found 12 matching entries..."
+
+You: "Should we create a ticket?"
+Agent: [Uses create_ticket tool] "✅ Created ticket TKT-1234-abc..."
+```
+
 ## Log Scenarios (1-5)
 
 1. **Healthy System** - All green logs, agent confirms no issues
@@ -60,30 +111,55 @@ npm test
 
 ## Architecture
 
+### Autonomous Agent Loop (LogTriageAgent)
 ```
-Agent Loop:
   1. Receive last 5 logs + full log history
-  2. Call Gemini API with available tools
+  2. Call LLM with available tools
   3. Execute returned tool calls
   4. Add results to memory
   5. Repeat until complete (max 10 iterations)
+  6. Generate investigation summary
+```
 
-Tools:
-  • searchLogs - Deep recursive log search
-  • checkRecentChanges - Correlate with deployments
-  • createTicket - Generate support tickets
-  • alertTeam - Send critical alerts
+### Conversational Agent Loop (ConversationalAgent) ✨ NEW
+```
+  1. User sends message
+  2. Add message to session memory
+  3. Call LLM with current memory
+  4. Execute any tool calls returned
+  5. Add response to memory
+  6. Return to user
+  7. Wait for next message (session persists)
+```
 
-Storage:
-  • JSON-based local persistence
-  • Atomic writes, safe concurrent access
-  • Automatic backup on changes
+### Available Tools (Both Modes)
+```
+  • searchLogs - Deep recursive log search across IDs
+  • checkRecentChanges - Correlate errors with deployments
+  • createTicket - Generate support tickets with suggestions
+  • alertTeam - Send alerts about critical issues
+```
 
-Frontend:
-  • Dashboard with stats
-  • Log viewer with filtering
-  • Ticket management
-  • Triage execution panel
+### Storage Layer
+```
+  • Sessions (conversational mode)
+    - In-memory Map-based storage
+    - Auto-cleanup after 1 hour inactivity
+    - Serialized conversation memory
+
+  • Tickets (both modes)
+    - JSON-based local persistence
+    - Atomic writes, safe concurrent access
+    - Automatic backup on changes
+```
+
+### Frontend Components
+```
+  • Dashboard - Stats and recent activity
+  • Log Viewer - Browse logs with filtering
+  • Ticket Management - CRUD operations
+  • Triage Panel - Both autonomous and conversational modes
+  • Settings - API key configuration
 ```
 
 ## Project Structure

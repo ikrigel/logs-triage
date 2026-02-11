@@ -17,6 +17,11 @@ const state = {
 // Chat interface state
 let currentLogSource = 'preset';
 
+// Conversation state (for interactive mode)
+let currentSessionId = null;
+let conversationMode = 'chat'; // 'chat' or 'auto'
+let sessionLogs = null;
+
 // Model options for provider selection
 const modelOptions = {
   gemini: [
@@ -95,6 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLogSet();
   loadSettings();
   setupPagination();
+
+  // Add Enter key support for chat input
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+  }
 });
 
 function switchView(view) {
@@ -726,10 +742,175 @@ function switchLogSource(source) {
   document.getElementById('url-input').style.display = source === 'url' ? 'block' : 'none';
 }
 
-function addMessageToChat(content, type = 'assistant') {
+// Conversation mode functions
+
+async function startConversation() {
+  try {
+    showThinkingIndicator();
+
+    // Get log source
+    const logSetSelect = document.getElementById('preset-logs');
+    const logSetNumber = parseInt(logSetSelect.value);
+
+    const provider = localStorage.getItem('ai_provider') || 'gemini';
+    const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
+    const apiKey = localStorage.getItem(`${provider}_api_key`);
+
+    // Start session
+    const response = await fetch('/api/chat/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        logSetNumber,
+        provider,
+        model,
+        apiKey,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to start conversation');
+    }
+
+    const data = await response.json();
+    currentSessionId = data.sessionId;
+    sessionLogs = data.logsInfo;
+
+    hideThinkingIndicator();
+
+    // Update UI
+    document.getElementById('session-info').style.display = 'flex';
+    document.getElementById('session-logs-info').textContent =
+      `${data.logsInfo.count} logs from ${data.logsInfo.source}`;
+    document.getElementById('log-source-selection').style.display = 'none';
+    document.getElementById('chat-input-container').style.display = 'flex';
+
+    // Display initial message
+    addMessageToChat(data.initialMessage, 'assistant-message');
+
+    // Focus input
+    document.getElementById('chat-input').focus();
+  } catch (error) {
+    hideThinkingIndicator();
+    console.error('Error starting conversation:', error);
+    addMessageToChat(`❌ ${error.message}`, 'system-message');
+  }
+}
+
+async function sendChatMessage() {
+  if (!currentSessionId) {
+    addMessageToChat('⚠️ No active conversation. Start a conversation first.', 'system-message');
+    return;
+  }
+
+  const inputEl = document.getElementById('chat-input');
+  const message = inputEl.value.trim();
+
+  if (!message) {
+    return;
+  }
+
+  // Display user message
+  addMessageToChat(message, 'user-message');
+  inputEl.value = '';
+  inputEl.disabled = true;
+
+  showThinkingIndicator();
+
+  try {
+    const response = await fetch(`/api/chat/${currentSessionId}/message`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to send message');
+    }
+
+    const data = await response.json();
+    hideThinkingIndicator();
+
+    // Display tool executions
+    if (data.toolExecutions && data.toolExecutions.length > 0) {
+      for (const toolExecution of data.toolExecutions) {
+        addToolExecutionToChat(toolExecution);
+      }
+    }
+
+    // Display assistant response
+    addMessageToChat(data.assistantResponse, 'assistant-message');
+
+  } catch (error) {
+    hideThinkingIndicator();
+    console.error('Error sending message:', error);
+    addMessageToChat(`❌ ${error.message}`, 'system-message');
+  } finally {
+    inputEl.disabled = false;
+    inputEl.focus();
+  }
+}
+
+function addToolExecutionToChat(toolExecution) {
+  const chatMessages = document.getElementById('chat-messages');
+  const toolEl = document.createElement('div');
+  toolEl.className = 'message tool-execution';
+
+  const toolName = toolExecution.toolCall.toolName;
+  const result = toolExecution.result;
+
+  // Format tool call
+  let toolDisplay = `<strong>🔧 ${toolName}</strong>`;
+
+  if (toolName === 'search_logs') {
+    const count = result.logs?.length || 0;
+    toolDisplay += `<br>Found ${count} matching logs`;
+  } else if (toolName === 'create_ticket') {
+    toolDisplay += `<br>✅ Created ticket: ${result.ticket?.id}`;
+  } else if (toolName === 'check_recent_changes') {
+    const changes = result.relevantChanges?.length || 0;
+    toolDisplay += `<br>Found ${changes} relevant changes`;
+  } else if (toolName === 'alert_team') {
+    toolDisplay += `<br>🚨 Alert sent`;
+  }
+
+  toolEl.innerHTML = `<p>${toolDisplay}</p>`;
+  chatMessages.appendChild(toolEl);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+async function endSession() {
+  if (!currentSessionId) return;
+
+  try {
+    await fetch(`/api/chat/${currentSessionId}`, {
+      method: 'DELETE',
+    });
+  } catch (error) {
+    console.error('Error ending session:', error);
+  }
+
+  // Reset UI
+  currentSessionId = null;
+  sessionLogs = null;
+  document.getElementById('session-info').style.display = 'none';
+  document.getElementById('chat-input-container').style.display = 'none';
+  document.getElementById('log-source-selection').style.display = 'block';
+  resetChat();
+}
+
+function addMessageToChat(content, type = 'assistant-message') {
   const chatMessages = document.getElementById('chat-messages');
   const messageEl = document.createElement('div');
-  messageEl.className = `message ${type}`;
+
+  // Map types to CSS classes
+  const typeClass = type === 'user-message' ? 'user-message' :
+                   type === 'assistant-message' ? 'assistant-message' :
+                   'system-message';
+
+  messageEl.className = `message ${typeClass}`;
 
   const p = document.createElement('p');
   p.innerHTML = content;
