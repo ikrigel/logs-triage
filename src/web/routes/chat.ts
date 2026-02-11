@@ -45,6 +45,7 @@ chatRouter.post('/start', async (req: Request, res: Response) => {
       source,
       provider: (provider || 'gemini') as any,
       model: model || 'gemini-2.0-flash',
+      apiKey,
     });
 
     res.json({
