@@ -46,7 +46,7 @@ export class AIService {
       }
       process.env.ANTHROPIC_API_KEY = apiKey;
       this.apiKey = apiKey;
-      this.modelName = config.model || 'claude-3-5-sonnet-20241022';
+      this.modelName = config.model || 'claude-3-5-sonnet';
       this.model = anthropic(this.modelName);
     } else if (provider === 'perplexity') {
       const apiKey = config.apiKey || process.env.PERPLEXITY_API_KEY || (process.env as any).perplexity_api_key;
