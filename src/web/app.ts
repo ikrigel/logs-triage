@@ -156,6 +156,125 @@ app.post('/api/triage/run', async (req: Request, res: Response) => {
   }
 });
 
+// Run triage with custom logs (from file upload or URL)
+app.post('/api/triage/run-custom', async (req: Request, res: Response) => {
+  try {
+    if (agentRunning) {
+      return res.status(429).json({ error: 'Triage already running' });
+    }
+
+    const { logs, changes, provider, model, apiKey } = req.body;
+
+    // Validate logs
+    if (!logs || !Array.isArray(logs) || logs.length === 0) {
+      return res.status(400).json({ error: 'Invalid or empty logs array' });
+    }
+
+    agentRunning = true;
+
+    const lastFive = logs.slice(-5);
+    const recentChanges = changes || [];
+
+    await ticketStorage.initialize();
+
+    // Create AIService with provided configuration if available
+    let customAIService: AIService | undefined;
+    if (provider && apiKey) {
+      customAIService = new AIService({
+        provider: provider as AIProvider,
+        model: model || undefined,
+        apiKey: apiKey,
+      });
+    }
+
+    // Run agent with custom logs
+    const agent = new LogTriageAgent(0, lastFive, logs, recentChanges, ticketStorage, customAIService);
+
+    const result = await agent.run();
+    const tickets = await ticketService.getAll();
+
+    res.json({
+      success: true,
+      result,
+      ticketsCreated: tickets.length,
+      tickets,
+    });
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: `Triage failed: ${msg}` });
+  } finally {
+    agentRunning = false;
+  }
+});
+
+// Fetch logs from URL
+app.post('/api/logs/fetch-url', async (req: Request, res: Response) => {
+  try {
+    const { url } = req.body;
+
+    if (!url) {
+      return res.status(400).json({ error: 'URL required' });
+    }
+
+    // Validate URL
+    try {
+      const parsedURL = new URL(url);
+      if (!['http:', 'https:'].includes(parsedURL.protocol)) {
+        return res.status(400).json({ error: 'Only HTTP/HTTPS URLs allowed' });
+      }
+    } catch {
+      return res.status(400).json({ error: 'Invalid URL format' });
+    }
+
+    // Fetch logs from URL
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(400).json({ error: `Failed to fetch: ${response.statusText}` });
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    let logs: any[] = [];
+
+    if (contentType.includes('application/json')) {
+      const data: any = await response.json();
+      logs = Array.isArray(data) ? data : data.logs || [];
+    } else {
+      const text = await response.text();
+      const lines = text.split('\n').filter((line: string) => line.trim());
+      logs = lines.map((line: string) => {
+        try {
+          return JSON.parse(line);
+        } catch {
+          return {
+            time: new Date().toISOString(),
+            service: 'unknown',
+            level: 'INFO',
+            msg: line,
+          };
+        }
+      });
+    }
+
+    // Normalize logs to LogEntry format
+    const normalizedLogs = logs.map((log: any) => ({
+      time: log.time || log.timestamp || new Date().toISOString(),
+      service: log.service || 'unknown',
+      level: log.level || 'INFO',
+      msg: log.msg || log.message || '',
+      ...log,
+    }));
+
+    res.json({
+      logs: normalizedLogs,
+      changes: [],
+    });
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: `URL fetch failed: ${msg}` });
+  }
+});
+
 app.get('/api/tickets', async (req: Request, res: Response) => {
   try {
     const filters = req.query as any;

@@ -670,3 +670,285 @@ function switchToProvider(provider) {
     saveModelSelection();
   }
 }
+
+// ===== CHAT INTERFACE FUNCTIONS =====
+
+let currentLogSource = 'preset';
+
+function switchLogSource(source) {
+  currentLogSource = source;
+
+  // Update button states
+  document.querySelectorAll('.source-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-source="${source}"]`).classList.add('active');
+
+  // Show/hide input elements
+  document.getElementById('preset-logs').style.display = source === 'preset' ? 'block' : 'none';
+  document.getElementById('file-upload-label').style.display = source === 'upload' ? 'block' : 'none';
+  document.getElementById('url-input').style.display = source === 'url' ? 'block' : 'none';
+}
+
+function addMessageToChat(content, type = 'assistant') {
+  const chatMessages = document.getElementById('chat-messages');
+  const messageEl = document.createElement('div');
+  messageEl.className = `message ${type}`;
+
+  const p = document.createElement('p');
+  p.innerHTML = content;
+  messageEl.appendChild(p);
+
+  chatMessages.appendChild(messageEl);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showThinkingIndicator() {
+  const chatMessages = document.getElementById('chat-messages');
+  const indicatorEl = document.createElement('div');
+  indicatorEl.id = 'thinking-indicator';
+  indicatorEl.className = 'message assistant';
+
+  indicatorEl.innerHTML = `
+    <div class="typing-indicator">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  `;
+
+  chatMessages.appendChild(indicatorEl);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideThinkingIndicator() {
+  const indicator = document.getElementById('thinking-indicator');
+  if (indicator) {
+    indicator.remove();
+  }
+}
+
+function resetChat() {
+  const chatMessages = document.getElementById('chat-messages');
+  chatMessages.innerHTML = `
+    <div class="message system-message">
+      <p>Welcome to the Log Triage Assistant! Select a log source below and start the investigation.</p>
+    </div>
+  `;
+  document.getElementById('start-triage-btn').disabled = false;
+}
+
+async function handleFileUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const validTypes = ['.log', '.txt', '.json', '.csv'];
+  const isValidType = validTypes.some(type => file.name.endsWith(type));
+
+  if (!isValidType) {
+    addMessageToChat(`❌ Invalid file type. Please upload .log, .txt, .json, or .csv files.`, 'system-message');
+    return;
+  }
+
+  addMessageToChat(`📤 Uploading file: ${file.name}`, 'user');
+
+  try {
+    const content = await file.text();
+    let parsedLogs;
+
+    if (file.name.endsWith('.json')) {
+      const data = JSON.parse(content);
+      parsedLogs = Array.isArray(data) ? data : data.logs || [];
+    } else {
+      parsedLogs = parseTextLogs(content);
+    }
+
+    if (parsedLogs.length === 0) {
+      addMessageToChat('⚠️ No logs found in the uploaded file.', 'system-message');
+      return;
+    }
+
+    addMessageToChat(`✅ Successfully loaded ${parsedLogs.length} logs from file.`, 'system-message');
+
+    // Store for later use
+    window.uploadedLogs = parsedLogs;
+    window.uploadedChanges = [];
+
+  } catch (error) {
+    addMessageToChat(`❌ Error parsing file: ${error.message}`, 'system-message');
+  }
+}
+
+function parseTextLogs(content) {
+  const lines = content.split('\n').filter(line => line.trim());
+  return lines.map((line) => {
+    try {
+      return JSON.parse(line);
+    } catch {
+      return {
+        time: new Date().toISOString(),
+        service: 'unknown',
+        level: 'INFO',
+        msg: line,
+      };
+    }
+  });
+}
+
+async function fetchLogsFromURL() {
+  const url = document.getElementById('url-input').value.trim();
+
+  if (!url) {
+    addMessageToChat('⚠️ Please enter a URL.', 'system-message');
+    return;
+  }
+
+  addMessageToChat(`🔗 Fetching logs from: ${url}`, 'user');
+  showThinkingIndicator();
+
+  try {
+    const response = await fetch('/api/logs/fetch-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+
+    hideThinkingIndicator();
+
+    if (!response.ok) {
+      const error = await response.json();
+      addMessageToChat(`❌ Error: ${error.error}`, 'system-message');
+      return;
+    }
+
+    const { logs, changes } = await response.json();
+
+    if (!logs || logs.length === 0) {
+      addMessageToChat('⚠️ No logs found at the URL.', 'system-message');
+      return;
+    }
+
+    addMessageToChat(`✅ Successfully loaded ${logs.length} logs from URL.`, 'system-message');
+
+    window.uploadedLogs = logs;
+    window.uploadedChanges = changes || [];
+
+  } catch (error) {
+    hideThinkingIndicator();
+    addMessageToChat(`❌ Network error: ${error.message}`, 'system-message');
+  }
+}
+
+async function startTriage() {
+  const btn = document.getElementById('start-triage-btn');
+  btn.disabled = true;
+
+  let logs, changes;
+  let logSource = 'preset';
+
+  try {
+    if (currentLogSource === 'preset') {
+      const setNumber = parseInt(document.getElementById('preset-logs').value);
+      addMessageToChat(`📋 Loading Log Set ${setNumber}...`, 'user');
+      showThinkingIndicator();
+
+      const response = await fetch(`/api/logs/${setNumber}`);
+      hideThinkingIndicator();
+
+      if (!response.ok) throw new Error('Failed to load logs');
+
+      const data = await response.json();
+      logs = data.logs;
+      changes = data.changes;
+      logSource = `preset-${setNumber}`;
+
+      addMessageToChat(`✅ Loaded ${logs.length} logs from Log Set ${setNumber}`, 'system-message');
+
+    } else if (currentLogSource === 'upload') {
+      if (!window.uploadedLogs) {
+        addMessageToChat('⚠️ Please upload a file first.', 'system-message');
+        btn.disabled = false;
+        return;
+      }
+      logs = window.uploadedLogs;
+      changes = window.uploadedChanges || [];
+      logSource = 'upload';
+
+    } else if (currentLogSource === 'url') {
+      if (!window.uploadedLogs) {
+        await fetchLogsFromURL();
+        if (!window.uploadedLogs) {
+          btn.disabled = false;
+          return;
+        }
+      }
+      logs = window.uploadedLogs;
+      changes = window.uploadedChanges || [];
+      logSource = 'url';
+    }
+
+    // Start triage
+    addMessageToChat(`🤖 Starting triage analysis on ${logs.length} logs...`, 'user');
+    showThinkingIndicator();
+
+    const provider = localStorage.getItem('ai_provider') || 'gemini';
+    const model = localStorage.getItem('ai_model') || 'gemini-2.0-flash';
+    const apiKey = localStorage.getItem(`${provider}_api_key`);
+
+    let endpoint, body;
+
+    if (logSource.startsWith('preset')) {
+      endpoint = '/api/triage/run';
+      body = {
+        logSetNumber: parseInt(logSource.split('-')[1]),
+        provider,
+        model,
+        apiKey,
+      };
+    } else {
+      endpoint = '/api/triage/run-custom';
+      body = {
+        logs,
+        changes,
+        provider,
+        model,
+        apiKey,
+      };
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    hideThinkingIndicator();
+
+    if (!response.ok) {
+      const error = await response.json();
+      addMessageToChat(`❌ Triage failed: ${error.error}`, 'system-message');
+      btn.disabled = false;
+      return;
+    }
+
+    const result = await response.json();
+
+    addMessageToChat('✅ Triage analysis complete!', 'system-message');
+
+    if (result.result?.summary) {
+      addMessageToChat(`📊 ${result.result.summary}`, 'assistant');
+    }
+
+    if (result.ticketsCreated > 0) {
+      addMessageToChat(`🎫 Created ${result.ticketsCreated} ticket(s) from the investigation.`, 'system-message');
+    } else {
+      addMessageToChat('✓ No issues found - system appears healthy.', 'system-message');
+    }
+
+  } catch (error) {
+    hideThinkingIndicator();
+    addMessageToChat(`❌ Error: ${error.message}`, 'system-message');
+  } finally {
+    btn.disabled = false;
+  }
+}

@@ -215,28 +215,67 @@
           </div>
         </div>
 
-        <!-- Triage View -->
+        <!-- Triage View - Chat Interface -->
         <div id="triage-view" class="view">
-          <div class="triage-panel">
-            <h3>Run Triage Analysis</h3>
-            <p>Select a log set and start the triage agent to analyze logs and generate tickets.</p>
-
-            <div class="form-group">
-              <label>Select Log Set</label>
-              <select id="triage-logset">
-                <option value="1">Log Set 1 (Healthy System)</option>
-                <option value="2">Log Set 2 (Warning Pollution)</option>
-                <option value="3">Log Set 3 (Critical Errors)</option>
-                <option value="4">Log Set 4 (Deployment Issue)</option>
-                <option value="5">Log Set 5 (Deep Investigation)</option>
-              </select>
+          <div class="chat-container">
+            <div class="chat-header">
+              <h3>🤖 Log Triage Assistant</h3>
+              <button id="new-chat-btn" class="btn btn-small btn-secondary" onclick="resetChat()">🔄 New Chat</button>
             </div>
 
-            <button id="run-triage-btn" class="btn btn-primary btn-large">▶ Run Triage</button>
+            <div id="chat-messages" class="chat-messages">
+              <div class="message system-message">
+                <p>Welcome to the Log Triage Assistant! Select a log source below and start the investigation.</p>
+              </div>
+            </div>
 
-            <div id="triage-output" class="output-panel" style="display: none">
-              <h4>Agent Output</h4>
-              <div id="triage-result" class="output-content"></div>
+            <div class="chat-input-area">
+              <div class="log-source-selector">
+                <button class="source-btn active" data-source="preset" onclick="switchLogSource('preset')">
+                  📋 Preset Logs
+                </button>
+                <button class="source-btn" data-source="upload" onclick="switchLogSource('upload')">
+                  📤 Upload File
+                </button>
+                <button class="source-btn" data-source="url" onclick="switchLogSource('url')">
+                  🔗 Fetch URL
+                </button>
+              </div>
+
+              <div id="input-container" class="input-container">
+                <!-- Preset Log Selector (default) -->
+                <select id="preset-logs" class="log-input active">
+                  <option value="1">Log Set 1 (Healthy System)</option>
+                  <option value="2">Log Set 2 (Warning Pollution)</option>
+                  <option value="3">Log Set 3 (Critical Errors)</option>
+                  <option value="4">Log Set 4 (Deployment Issue)</option>
+                  <option value="5">Log Set 5 (Deep Investigation)</option>
+                </select>
+
+                <!-- File Upload Input (hidden) -->
+                <input
+                  type="file"
+                  id="file-upload"
+                  class="log-input"
+                  accept=".log,.txt,.json,.csv"
+                  style="display:none;"
+                  onchange="handleFileUpload(event)">
+                <label for="file-upload" id="file-upload-label" class="file-upload-label" style="display:none;">
+                  Click to select a log file (.log, .txt, .json, .csv)
+                </label>
+
+                <!-- URL Input (hidden) -->
+                <input
+                  type="text"
+                  id="url-input"
+                  class="log-input"
+                  placeholder="https://example.com/logs.json"
+                  style="display:none;">
+              </div>
+
+              <button id="start-triage-btn" class="btn btn-primary btn-large" onclick="startTriage()">
+                ▶ Start Triage
+              </button>
             </div>
           </div>
         </div>
