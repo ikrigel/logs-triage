@@ -355,7 +355,52 @@ app.patch('/api/tickets/:id', async (req: Request, res: Response) => {
 
     res.json(ticket);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update ticket' });
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Error updating ticket:', error);
+    res.status(500).json({ error: `Failed to update ticket: ${msg}` });
+  }
+});
+
+// Delete a ticket
+app.delete('/api/tickets/:id', async (req: Request, res: Response) => {
+  try {
+    const deleted = await ticketService.deleteTicket(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Ticket not found' });
+    }
+
+    res.json({ success: true, message: 'Ticket deleted' });
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Error deleting ticket:', error);
+    res.status(500).json({ error: `Failed to delete ticket: ${msg}` });
+  }
+});
+
+// Delete all tickets
+app.delete('/api/tickets', async (req: Request, res: Response) => {
+  try {
+    await ticketService.clearAll();
+    res.json({ success: true, message: 'All tickets deleted' });
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Error clearing tickets:', error);
+    res.status(500).json({ error: `Failed to clear tickets: ${msg}` });
+  }
+});
+
+// Export tickets as JSON
+app.get('/api/tickets/export/json', async (req: Request, res: Response) => {
+  try {
+    const tickets = await ticketService.getAll();
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="tickets.json"');
+    res.json(tickets);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Error exporting tickets:', error);
+    res.status(500).json({ error: `Failed to export tickets: ${msg}` });
   }
 });
 

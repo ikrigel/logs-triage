@@ -285,28 +285,34 @@ function renderTickets(tickets) {
   list.innerHTML = tickets
     .map(
       (ticket) => `
-    <div class="ticket-item" onclick="toggleTicketDetail('${ticket.id}')">
-      <div class="ticket-header">
-        <div class="ticket-title">${ticket.title}</div>
-        <div style="display: flex; gap: 0.5rem;">
-          <span class="ticket-badge badge-${ticket.severity}">${ticket.severity}</span>
-          <span class="ticket-badge badge-${ticket.status}">${ticket.status}</span>
-        </div>
-      </div>
-      <div class="ticket-meta">${ticket.id} • Created: ${new Date(ticket.createdAt).toLocaleDateString()}</div>
-      <div class="ticket-services">
-        ${ticket.affectedServices.map((s) => `<span class="service-tag">${s}</span>`).join('')}
-      </div>
-      <div id="detail-${ticket.id}" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-        <p>${ticket.description}</p>
-        ${
-          ticket.suggestions.length > 0
-            ? `<div style="margin-top: 0.75rem;"><strong>Suggestions:</strong><ul>${ticket.suggestions.map((s) => `<li>${s}</li>`).join('')}</ul></div>`
-            : ''
-        }
-        <div class="ticket-actions" style="margin-top: 1rem;">
-          <button class="btn btn-small" onclick="updateTicketStatus('${ticket.id}', 'in-progress')">In Progress</button>
-          <button class="btn btn-small" onclick="updateTicketStatus('${ticket.id}', 'closed')">Close</button>
+    <div class="ticket-item">
+      <div class="ticket-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px 0;">
+        <input type="checkbox" class="ticket-selector" value="${ticket.id}" onchange="updateSelectedCount()" />
+        <div style="flex: 1; cursor: pointer;" onclick="toggleTicketDetail('${ticket.id}')">
+          <div class="ticket-header">
+                <div class="ticket-title">${ticket.title}</div>
+            <div style="display: flex; gap: 0.5rem;">
+              <span class="ticket-badge badge-${ticket.severity}">${ticket.severity}</span>
+              <span class="ticket-badge badge-${ticket.status}">${ticket.status}</span>
+            </div>
+          </div>
+          <div class="ticket-meta">${ticket.id} • Created: ${new Date(ticket.createdAt).toLocaleDateString()}</div>
+          <div class="ticket-services">
+            ${ticket.affectedServices.map((s) => `<span class="service-tag">${s}</span>`).join('')}
+          </div>
+          <div id="detail-${ticket.id}" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <p>${ticket.description}</p>
+            ${
+              ticket.suggestions.length > 0
+                ? `<div style="margin-top: 0.75rem;"><strong>Suggestions:</strong><ul>${ticket.suggestions.map((s) => `<li>${s}</li>`).join('')}</ul></div>`
+                : ''
+            }
+            <div class="ticket-actions" style="margin-top: 1rem;">
+              <button class="btn btn-small" onclick="updateTicketStatus('${ticket.id}', 'in-progress')">In Progress</button>
+              <button class="btn btn-small" onclick="updateTicketStatus('${ticket.id}', 'closed')">Close</button>
+              <button class="btn btn-small btn-danger" onclick="deleteTicket('${ticket.id}')">Delete</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -364,6 +370,118 @@ async function submitTicket(e) {
     }
   } catch (error) {
     console.error('Error creating ticket:', error);
+  }
+}
+
+// Bulk action functions
+function toggleBulkActions() {
+  const bulkActions = document.getElementById('bulk-actions');
+  bulkActions.style.display = bulkActions.style.display === 'none' ? 'block' : 'none';
+  if (bulkActions.style.display === 'none') {
+    document.getElementById('select-all-tickets').checked = false;
+    document.querySelectorAll('.ticket-selector').forEach(cb => cb.checked = false);
+    updateSelectedCount();
+  }
+}
+
+function toggleAllTickets(checked) {
+  document.querySelectorAll('.ticket-selector').forEach(cb => cb.checked = checked);
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  const selected = document.querySelectorAll('.ticket-selector:checked').length;
+  document.getElementById('selected-count').textContent = selected;
+}
+
+function getSelectedTickets() {
+  const selected = [];
+  document.querySelectorAll('.ticket-selector:checked').forEach(cb => {
+    selected.push(cb.value);
+  });
+  return selected;
+}
+
+async function deleteTicket(ticketId) {
+  if (!confirm('Are you sure you want to delete this ticket?')) return;
+
+  try {
+    const response = await fetch(`/api/tickets/${ticketId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      showToast('Ticket deleted', 'success');
+      loadTickets();
+    } else {
+      showToast('Failed to delete ticket', 'error');
+    }
+  } catch (error) {
+    console.error('Error deleting ticket:', error);
+    showToast('Error deleting ticket', 'error');
+  }
+}
+
+async function deleteSelectedTickets() {
+  const selected = getSelectedTickets();
+  if (selected.length === 0) {
+    showToast('No tickets selected', 'info');
+    return;
+  }
+
+  if (!confirm(`Delete ${selected.length} ticket(s)?`)) return;
+
+  try {
+    let deleted = 0;
+    for (const ticketId of selected) {
+      const response = await fetch(`/api/tickets/${ticketId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) deleted++;
+    }
+
+    showToast(`Deleted ${deleted}/${selected.length} tickets`, 'success');
+    document.getElementById('bulk-actions').style.display = 'none';
+    loadTickets();
+  } catch (error) {
+    console.error('Error deleting tickets:', error);
+    showToast('Error deleting tickets', 'error');
+  }
+}
+
+async function exportSelectedTickets() {
+  const selected = getSelectedTickets();
+
+  try {
+    const response = await fetch('/api/tickets');
+    const data = await response.json();
+
+    let ticketsToExport = data.tickets || data;
+
+    // Filter by selected if any
+    if (selected.length > 0) {
+      ticketsToExport = ticketsToExport.filter(t => selected.includes(t.id));
+    }
+
+    if (ticketsToExport.length === 0) {
+      showToast('No tickets to export', 'info');
+      return;
+    }
+
+    // Create blob and download
+    const jsonStr = JSON.stringify(ticketsToExport, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tickets-${new Date().getTime()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    showToast(`Exported ${ticketsToExport.length} ticket(s)`, 'success');
+  } catch (error) {
+    console.error('Error exporting tickets:', error);
+    showToast('Error exporting tickets', 'error');
   }
 }
 
