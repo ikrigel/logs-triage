@@ -4,6 +4,7 @@ import { DashboardView } from './components/Views/DashboardView';
 import { LogsView } from './components/Views/LogsView';
 import { TicketsView } from './components/Views/TicketsView';
 import { SettingsView } from './components/Views/SettingsView';
+import { AboutView } from './components/Views/AboutView';
 
 export type ViewComponent = {
   [key: string]: () => ReactNode;
@@ -15,6 +16,7 @@ export const views: ViewComponent = {
   logs: () => <LogsView />,
   tickets: () => <TicketsView />,
   settings: () => <SettingsView />,
+  about: () => <AboutView />,
 };
 
 export function renderView(viewName: string): ReactNode {

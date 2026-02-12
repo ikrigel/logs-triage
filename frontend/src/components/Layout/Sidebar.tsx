@@ -8,6 +8,7 @@ const navigationItems: Array<{ id: View; label: string; icon: string }> = [
   { id: 'logs', label: 'Logs', icon: '📝' },
   { id: 'tickets', label: 'Tickets', icon: '🎫' },
   { id: 'settings', label: 'Settings', icon: '⚙️' },
+  { id: 'about', label: 'About', icon: 'ℹ️' },
 ];
 
 export function Sidebar() {

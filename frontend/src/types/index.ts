@@ -50,4 +50,4 @@ export interface ChatSession {
   lastActivity: string;
 }
 
-export type View = 'dashboard' | 'triage' | 'logs' | 'tickets' | 'settings';
+export type View = 'dashboard' | 'triage' | 'logs' | 'tickets' | 'settings' | 'about';
