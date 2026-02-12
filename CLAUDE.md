@@ -342,3 +342,239 @@ For questions or issues:
 2. Review type definitions for API contracts
 3. Read plan file for architectural decisions
 4. Check README.md for quick setup guide
+
+---
+
+## React Frontend (New!)
+
+The application now includes a modern **React 18 + TypeScript** frontend that has completely replaced the vanilla JavaScript UI.
+
+### Frontend Architecture
+
+**Tech Stack:**
+- React 18.2 for UI components
+- TypeScript 5.9 for type safety
+- Vite for fast development and optimized builds
+- Zustand for UI state management
+- TanStack Query for server state management
+- CSS with custom properties for theming
+
+### Frontend Directory Structure
+
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── Layout/
+│   │   │   ├── Header.tsx          - Top navigation bar
+│   │   │   ├── Sidebar.tsx         - Navigation sidebar with 5 views
+│   │   │   └── Layout.tsx          - Main layout wrapper
+│   │   ├── Chat/
+│   │   │   ├── TriageView.tsx      - Main chat interface
+│   │   │   ├── ChatWindow.tsx      - Message display
+│   │   │   ├── ChatMessage.tsx     - Individual message component
+│   │   │   ├── ChatInput.tsx       - Message input textarea
+│   │   │   └── LogSourceSelector.tsx - Log set selection UI
+│   │   ├── Views/
+│   │   │   ├── DashboardView.tsx   - Metrics and activity
+│   │   │   ├── LogsView.tsx        - Log search and filtering
+│   │   │   ├── TicketsView.tsx     - Ticket management
+│   │   │   └── SettingsView.tsx    - Provider/API key config
+│   │   └── Common/
+│   │       ├── ErrorBoundary.tsx   - Error handling component
+│   │       └── LoadingSkeleton.tsx - Loading skeleton screens
+│   ├── hooks/
+│   │   ├── useChat.ts              - Chat state management with TanStack Query
+│   │   └── useAPI.ts               - API data fetching hook
+│   ├── store/
+│   │   └── uiStore.ts              - Zustand store for UI state
+│   ├── types/
+│   │   └── index.ts                - TypeScript type definitions
+│   ├── config/
+│   │   └── api.ts                  - API endpoint configuration
+│   ├── styles/
+│   │   └── globals.css             - Global styles and CSS variables
+│   ├── App.tsx                     - Root component
+│   ├── main.tsx                    - Entry point
+│   └── routes.tsx                  - View routing logic
+├── public/
+│   └── vite.svg                    - Favicon
+├── vite.config.ts                  - Vite configuration with API proxy
+├── tsconfig.json                   - TypeScript configuration
+├── package.json                    - Dependencies and scripts
+└── README.md                       - Frontend-specific documentation
+```
+
+### Development Workflow
+
+**Start Development Server:**
+```bash
+cd frontend
+npm install
+npm run dev
+# Opens at http://localhost:5173
+# API calls proxied to http://localhost:3000
+```
+
+**Build for Production:**
+```bash
+npm run build
+# Creates optimized dist/ folder (~79.8 kB gzipped)
+```
+
+**Run E2E Tests:**
+```bash
+npm run test
+# Runs Playwright tests (30+ tests across all views)
+```
+
+### Components Overview
+
+#### Layout Components
+- **Header** - Top navigation with theme toggle
+- **Sidebar** - Navigation with 5 view buttons, auto-collapse on mobile
+- **Layout** - Main wrapper combining Header and Sidebar
+- **ErrorBoundary** - Error handling with graceful fallback
+
+#### Chat Components
+- **TriageView** - Orchestrates entire chat flow
+- **ChatWindow** - Displays messages with auto-scroll
+- **ChatMessage** - Individual message with tool execution display
+- **ChatInput** - Textarea with auto-grow, Enter to send
+- **LogSourceSelector** - UI for selecting log sets 1-5
+
+#### View Components
+- **DashboardView** - Metrics cards with trends and activity feed
+- **LogsView** - Log table with search and filtering
+- **TicketsView** - Ticket list with detail panel
+- **SettingsView** - AI provider and API key management
+
+#### Utility Components
+- **LoadingSkeleton** - 5 types: card, text, line, circle, metric
+
+### State Management
+
+**UI State (Zustand):**
+```typescript
+- currentView: Which view is active
+- sidebarOpen: Is sidebar visible
+- darkMode: Dark mode enabled
+- aiProvider: Selected AI provider (gemini|claude|perplexity)
+- aiModel: Selected model for current provider
+```
+
+**Server State (TanStack Query):**
+- Chat session state with refetch every 30 seconds
+- Message history and tool execution results
+- Optimistic UI updates for user messages
+
+**Component State (React Hooks):**
+- Form input values
+- Filter/search state
+- Modal visibility
+- Loading states
+
+### Key Features
+
+✅ **Navigation** - 5 views with sidebar (auto-collapses on mobile)
+✅ **Chat Interface** - Interactive conversation with AI agent
+✅ **Triage Mode** - Log analysis with tool execution
+✅ **Dashboard** - Metrics cards and activity feed
+✅ **Logs** - Search and filter by level and service
+✅ **Tickets** - View and filter by status/severity
+✅ **Settings** - Select AI provider, model, manage API keys
+✅ **Dark Mode** - Toggle with localStorage persistence
+✅ **Mobile** - Fully responsive, hamburger menu
+✅ **Error Handling** - React error boundaries with fallback UI
+✅ **Loading States** - Animated skeleton screens
+✅ **Accessibility** - aria-labels, semantic HTML, WCAG compliant
+
+### Bundle Size
+
+| Asset | Size |
+|-------|------|
+| HTML | 0.46 kB |
+| CSS | 5.54 kB |
+| JavaScript | 73.78 kB |
+| **Total (gzipped)** | **~79.8 kB** |
+
+Well under 100 kB target! ✅
+
+### API Integration
+
+The React app communicates with the Express backend:
+
+**Chat Endpoints:**
+- `POST /api/chat/start` - Start conversation with log set
+- `POST /api/chat/:sessionId/message` - Send message
+- `GET /api/chat/:sessionId` - Get conversation state
+- `DELETE /api/chat/:sessionId` - End conversation
+
+**Data Endpoints:**
+- `GET /api/logs` - List log sets
+- `GET /api/logs/:setNumber` - Get logs by set
+- `GET /api/tickets` - List tickets
+- `POST /api/tickets` - Create ticket
+
+### Testing
+
+**Playwright E2E Tests:**
+- 30+ tests across 6 test suites
+- Layout and navigation
+- All view functionality
+- Mobile responsiveness
+- Accessibility compliance
+- Performance benchmarks
+
+**Run Tests:**
+```bash
+npm run test
+```
+
+### Performance Notes
+
+- Vite hot module reloading for instant dev feedback
+- Code splitting automatic with Vite
+- CSS variables enable instant theme switching
+- TanStack Query caches API responses
+- Zustand provides lightweight state (<4 kB)
+- Production bundle ~79.8 kB (highly optimized)
+
+### Development Tips
+
+1. **Dark Mode**: Click moon icon in header or use Zustand directly
+2. **Theme Colors**: Edit CSS variables in `styles/globals.css`
+3. **Add View**: Create new view in `components/Views/` and add to routes
+4. **Custom Hook**: Add to `hooks/` and export from there
+5. **API Endpoints**: Centralized in `config/api.ts`
+
+### Production Deployment
+
+1. Build frontend: `npm run build` in frontend directory
+2. Copy dist/ contents to Express public folder
+3. Configure Express to serve dist/index.html
+4. Update API proxy in production (if needed)
+5. Deploy as usual
+
+### Type Safety
+
+Full TypeScript strict mode enabled:
+- All components properly typed
+- Props interfaces for all components
+- Return type annotations
+- No implicit any
+- Strict null/undefined checks
+
+### Migration from Vanilla JS
+
+The React version maintains 100% feature parity with the original vanilla JavaScript frontend while adding:
+- Type safety with TypeScript
+- Reusable components
+- Modern hooks-based patterns
+- Better error handling
+- Loading states
+- Comprehensive tests
+- Improved performance
+
+All backend functionality (agent loop, tools, tickets, etc.) remains unchanged.
+
