@@ -1,0 +1,90 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [active] [ref=e12] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e17]:
+        - link "Help & Guide" [ref=e18] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e19]:
+        - link "About" [ref=e20] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e22] [cursor=pointer]
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Tickets" [level=2] [ref=e25]
+      - generic [ref=e27]: Ready
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "Support Tickets" [level=3] [ref=e30]
+        - generic [ref=e31]:
+          - button "+ Create Ticket" [ref=e32] [cursor=pointer]
+          - button "📋 Select" [ref=e33] [cursor=pointer]
+          - button "💾 Export JSON" [ref=e34] [cursor=pointer]
+          - button "🗑️ Delete" [ref=e35] [cursor=pointer]
+      - generic [ref=e36]:
+        - combobox [ref=e37] [cursor=pointer]:
+          - option "All Statuses" [selected]
+          - option "Open"
+          - option "In Progress"
+          - option "Closed"
+        - combobox [ref=e38] [cursor=pointer]:
+          - option "All Severities" [selected]
+          - option "Critical"
+          - option "High"
+          - option "Medium"
+          - option "Low"
+      - generic [ref=e39]:
+        - generic [ref=e41] [cursor=pointer]:
+          - checkbox [ref=e42]
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - generic [ref=e45]: Zendesk Token Expiration Causing Enrichment Failures in batch_20250117_A
+              - generic [ref=e46]:
+                - generic [ref=e47]: high
+                - generic [ref=e48]: open
+            - generic [ref=e49]: "TKT-1770825647531-85fkny7i7 • Created: 2/11/2026"
+            - generic [ref=e50]:
+              - generic [ref=e51]: enrichment-service
+              - generic [ref=e52]: source-connector
+        - generic [ref=e54] [cursor=pointer]:
+          - checkbox [ref=e55]
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - generic [ref=e58]: Zendesk Token Expiration Causing Enrichment Failures in batch_20250117_A
+              - generic [ref=e59]:
+                - generic [ref=e60]: high
+                - generic [ref=e61]: open
+            - generic [ref=e62]: "TKT-1770825654326-zv7bwmkvf • Created: 2/11/2026"
+            - generic [ref=e63]:
+              - generic [ref=e64]: enrichment-service
+              - generic [ref=e65]: source-connector
+        - generic [ref=e67] [cursor=pointer]:
+          - checkbox [ref=e68]
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: Systematic batch enrichment failures for batch_20250117_A
+              - generic [ref=e72]:
+                - generic [ref=e73]: high
+                - generic [ref=e74]: open
+            - generic [ref=e75]: "TKT-1770826893772-x5u4bz94f • Created: 2/11/2026"
+            - generic [ref=e77]: enrichment-service
+    - text: ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅
+```

@@ -25,17 +25,21 @@ let sessionLogs = null;
 // Model options for provider selection
 const modelOptions = {
   gemini: [
-    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Fastest)' },
+    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Recommended)' },
+    { value: 'gemini-2.0-flash-exp', label: 'Gemini 2.0 Flash Exp (New)' },
     { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (Most Capable)' },
-    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash (Fast)' },
+    { value: 'gemini-1.5-pro-exp-0801', label: 'Gemini 1.5 Pro Exp (Latest)' },
   ],
   claude: [
     { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet (Best)' },
     { value: 'claude-3-5-haiku', label: 'Claude 3.5 Haiku (Fast)' },
+    { value: 'claude-3-opus', label: 'Claude 3 Opus (Powerful)' },
   ],
   perplexity: [
     { value: 'sonar', label: 'Sonar (Standard)' },
     { value: 'sonar-pro', label: 'Sonar Pro (Advanced)' },
+    { value: 'sonar-reasoning', label: 'Sonar Reasoning (Deep)' },
   ],
 };
 

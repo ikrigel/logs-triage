@@ -1,0 +1,63 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e17]:
+        - link "Help & Guide" [ref=e18] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e19]:
+        - link "About" [ref=e20] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e22] [cursor=pointer]
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Triage" [level=2] [ref=e25]
+      - generic [ref=e27]: Ready
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - heading "🤖 Log Triage Assistant" [level=3] [ref=e31]
+        - button "🔄 New Chat" [ref=e32] [cursor=pointer]
+      - generic [ref=e33]:
+        - paragraph [ref=e35]: Welcome to the Log Triage Assistant! Select a log source below and start the investigation.
+        - paragraph [ref=e37]: 📋 Loading Log Set 1...
+        - paragraph [ref=e39]: ✅ Loaded 28 logs from Log Set 1
+        - paragraph [ref=e41]: 🤖 Starting triage analysis on 28 logs...
+        - paragraph [ref=e43]: "❌ Triage failed: Triage already running"
+        - paragraph [ref=e45]: 📋 Loading Log Set 2...
+        - paragraph [ref=e47]: ✅ Loaded 50 logs from Log Set 2
+        - paragraph [ref=e49]: 🤖 Starting triage analysis on 50 logs...
+        - paragraph [ref=e51]: "❌ Triage failed: Triage already running"
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - button "📋 Preset Logs" [ref=e54] [cursor=pointer]
+          - button "📤 Upload File" [ref=e55] [cursor=pointer]
+          - button "🔗 Fetch URL" [ref=e56] [cursor=pointer]
+        - combobox "Select which sample log set to analyze (1-5, increasing complexity)" [ref=e58]:
+          - option "Log Set 1 (Healthy System)"
+          - option "Log Set 2 (Warning Pollution)" [selected]
+          - option "Log Set 3 (Critical Errors)"
+          - option "Log Set 4 (Deployment Issue)"
+          - option "Log Set 5 (Deep Investigation)"
+        - generic [ref=e59]:
+          - button "💬 Start Conversation" [ref=e60] [cursor=pointer]
+          - button "▶ Run Auto Triage" [ref=e61] [cursor=pointer]
+    - text: ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅
+```

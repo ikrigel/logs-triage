@@ -1,0 +1,65 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e17]:
+        - link "Help & Guide" [ref=e18] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e19]:
+        - link "About" [ref=e20] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e22] [cursor=pointer]
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - button "☰" [ref=e25] [cursor=pointer]
+      - heading "Dashboard" [level=2] [ref=e26]
+      - generic [ref=e28]: Ready
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Total Logs Processed" [level=3] [ref=e32]
+          - paragraph [ref=e33]: "28"
+        - generic [ref=e34]:
+          - heading "Open Tickets" [level=3] [ref=e35]
+          - paragraph [ref=e36]: "3"
+        - generic [ref=e37]:
+          - heading "Critical Issues" [level=3] [ref=e38]
+          - paragraph [ref=e39]: "0"
+        - generic [ref=e40]:
+          - heading "Last Updated" [level=3] [ref=e41]
+          - paragraph [ref=e42]: 12:05:37 AM
+      - generic [ref=e43]:
+        - heading "Quick Actions" [level=3] [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - heading "Run Triage" [level=4] [ref=e47]
+            - paragraph [ref=e48]: Analyze logs and generate tickets
+            - button "Go to Triage" [ref=e49] [cursor=pointer]
+          - generic [ref=e50]:
+            - heading "View Logs" [level=4] [ref=e51]
+            - paragraph [ref=e52]: Browse and filter production logs
+            - button "Go to Logs" [ref=e53] [cursor=pointer]
+          - generic [ref=e54]:
+            - heading "Manage Tickets" [level=4] [ref=e55]
+            - paragraph [ref=e56]: Create and update support tickets
+            - button "Go to Tickets" [ref=e57] [cursor=pointer]
+    - text: ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅
+```

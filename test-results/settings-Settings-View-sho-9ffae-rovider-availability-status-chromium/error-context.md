@@ -20,115 +20,122 @@
       - listitem [ref=e15]:
         - link "Settings" [active] [ref=e16] [cursor=pointer]:
           - /url: "#"
-    - button "🌙" [ref=e18] [cursor=pointer]
-  - main [ref=e19]:
-    - generic [ref=e20]:
-      - heading "Settings" [level=2] [ref=e21]
-      - generic [ref=e23]: Ready
-    - generic [ref=e25]:
-      - heading "⚙️ Settings & Configuration" [level=3] [ref=e26]
-      - generic [ref=e27]:
-        - heading "🔑 API Keys Management" [level=4] [ref=e28]
-        - paragraph [ref=e29]: Configure your API keys for AI providers. Keys are stored securely in session.
-        - generic [ref=e30]:
-          - generic [ref=e31]:
-            - generic [ref=e32]: Gemini API Key
-            - generic [ref=e33]:
-              - textbox "Gemini API Key" [ref=e34]:
-                - /placeholder: AIza...
-              - button "👁" [ref=e35] [cursor=pointer]
-              - button "✕" [ref=e36] [cursor=pointer]
+      - listitem [ref=e17]:
+        - link "Help & Guide" [ref=e18] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e19]:
+        - link "About" [ref=e20] [cursor=pointer]:
+          - /url: "#"
+    - button "🌙" [ref=e22] [cursor=pointer]
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Settings" [level=2] [ref=e25]
+      - generic [ref=e27]: Ready
+    - generic [ref=e29]:
+      - heading "⚙️ Settings & Configuration" [level=3] [ref=e30]
+      - generic [ref=e31]:
+        - heading "🔑 API Keys Management" [level=4] [ref=e32]
+        - paragraph [ref=e33]: Configure your API keys for AI providers. Keys are stored securely in session.
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: Gemini API Key
             - generic [ref=e37]:
-              - text: Get key at
-              - link "aistudio.google.com" [ref=e38] [cursor=pointer]:
-                - /url: https://aistudio.google.com/app/apikey
-          - generic [ref=e39]:
-            - generic [ref=e40]: Perplexity API Key
+              - textbox "Gemini API Key" [ref=e38]:
+                - /placeholder: AIza...
+              - button "👁" [ref=e39] [cursor=pointer]
+              - button "✕" [ref=e40] [cursor=pointer]
             - generic [ref=e41]:
-              - textbox "Perplexity API Key" [ref=e42]:
-                - /placeholder: pplx-...
-              - button "👁" [ref=e43] [cursor=pointer]
-              - button "✕" [ref=e44] [cursor=pointer]
+              - text: Get key at
+              - link "aistudio.google.com" [ref=e42] [cursor=pointer]:
+                - /url: https://aistudio.google.com/app/apikey
+          - generic [ref=e43]:
+            - generic [ref=e44]: Perplexity API Key
             - generic [ref=e45]:
-              - text: Get key at
-              - link "perplexity.ai" [ref=e46] [cursor=pointer]:
-                - /url: https://www.perplexity.ai/settings/api
-          - generic [ref=e47]:
-            - generic [ref=e48]: Claude (Anthropic) API Key
+              - textbox "Perplexity API Key" [ref=e46]:
+                - /placeholder: pplx-...
+              - button "👁" [ref=e47] [cursor=pointer]
+              - button "✕" [ref=e48] [cursor=pointer]
             - generic [ref=e49]:
-              - textbox "Claude (Anthropic) API Key" [ref=e50]:
-                - /placeholder: sk-ant-...
-              - button "👁" [ref=e51] [cursor=pointer]
-              - button "✕" [ref=e52] [cursor=pointer]
-            - generic [ref=e53]:
               - text: Get key at
-              - link "console.anthropic.com" [ref=e54] [cursor=pointer]:
+              - link "perplexity.ai" [ref=e50] [cursor=pointer]:
+                - /url: https://www.perplexity.ai/settings/api
+          - generic [ref=e51]:
+            - generic [ref=e52]: Claude (Anthropic) API Key
+            - generic [ref=e53]:
+              - textbox "Claude (Anthropic) API Key" [ref=e54]:
+                - /placeholder: sk-ant-...
+              - button "👁" [ref=e55] [cursor=pointer]
+              - button "✕" [ref=e56] [cursor=pointer]
+            - generic [ref=e57]:
+              - text: Get key at
+              - link "console.anthropic.com" [ref=e58] [cursor=pointer]:
                 - /url: https://console.anthropic.com/api/keys
-          - button "💾 Save API Keys" [ref=e55] [cursor=pointer]
-      - generic [ref=e56]:
-        - heading "🤖 AI Model Selection" [level=4] [ref=e57]
-        - paragraph [ref=e58]: Choose your preferred AI provider and model for log analysis.
-        - generic [ref=e59]:
-          - generic [ref=e60]:
-            - generic [ref=e61]: AI Provider
-            - combobox "AI Provider" [ref=e62]:
+          - button "💾 Save API Keys" [ref=e59] [cursor=pointer]
+      - generic [ref=e60]:
+        - heading "🤖 AI Model Selection" [level=4] [ref=e61]
+        - paragraph [ref=e62]: Choose your preferred AI provider and model for log analysis.
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]: AI Provider
+            - combobox "AI Provider" [ref=e66]:
               - option "Gemini (Google)" [selected]
               - option "Claude (Anthropic)"
               - option "Perplexity"
-          - generic [ref=e63]:
-            - generic [ref=e64]: Model
-            - combobox "Model" [ref=e65]:
+          - generic [ref=e67]:
+            - generic [ref=e68]: Model
+            - combobox "Model" [ref=e69]:
               - option "Gemini 2.0 Flash (Fastest)" [selected]
               - option "Gemini 1.5 Pro (Most Capable)"
               - option "Gemini 1.5 Flash"
-          - button "✓ Save Model Selection" [ref=e66] [cursor=pointer]
-        - generic [ref=e67]:
-          - generic [ref=e68]:
-            - generic [ref=e69]: "Current Provider:"
-            - generic [ref=e70]: Gemini
-          - generic [ref=e71]:
-            - generic [ref=e72]: "Current Model:"
-            - generic [ref=e73]: gemini-2.0-flash
-      - generic [ref=e74]:
-        - heading "📊 Provider Status" [level=4] [ref=e75]
-        - generic [ref=e76]:
-          - generic [ref=e77]:
-            - heading "Gemini" [level=5] [ref=e78]
-            - paragraph [ref=e79]: Fast & efficient
-            - generic [ref=e80]: ✗ No Key
-            - button "Select" [ref=e81] [cursor=pointer]
-          - generic [ref=e82]:
-            - heading "Claude" [level=5] [ref=e83]
-            - paragraph [ref=e84]: Advanced reasoning
-            - generic [ref=e85]: ✗ No Key
-            - button "Select" [ref=e86] [cursor=pointer]
-          - generic [ref=e87]:
-            - heading "Perplexity" [level=5] [ref=e88]
-            - paragraph [ref=e89]: Alternative option
-            - generic [ref=e90]: ✗ No Key
-            - button "Select" [ref=e91] [cursor=pointer]
-      - generic [ref=e92]:
-        - heading "🖥️ System Status" [level=4] [ref=e93]
-        - generic [ref=e94]:
-          - generic [ref=e95]:
-            - generic [ref=e96]: "Theme:"
-            - generic [ref=e97]: Light
-          - generic [ref=e98]:
-            - generic [ref=e99]: "Session:"
-            - generic [ref=e100]: Active
-      - generic [ref=e101]:
-        - heading "ℹ️ Help & Information" [level=4] [ref=e102]
-        - generic [ref=e103]:
-          - generic [ref=e104]:
-            - strong [ref=e105]: Gemini Models
-            - paragraph [ref=e106]: 2.0 Flash is fastest, 1.5 Pro is most capable
-          - generic [ref=e107]:
-            - strong [ref=e108]: Claude
-            - paragraph [ref=e109]: Advanced reasoning and analysis capabilities
-          - generic [ref=e110]:
-            - strong [ref=e111]: Perplexity
-            - paragraph [ref=e112]: Alternative option, good for fallback
-          - generic [ref=e113]:
-            - strong [ref=e114]: API Keys
-            - paragraph [ref=e115]: Stored securely in session, never logged
+          - button "✓ Save Model Selection" [ref=e70] [cursor=pointer]
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: "Current Provider:"
+            - generic [ref=e74]: Gemini
+          - generic [ref=e75]:
+            - generic [ref=e76]: "Current Model:"
+            - generic [ref=e77]: gemini-2.0-flash
+      - generic [ref=e78]:
+        - heading "📊 Provider Status" [level=4] [ref=e79]
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - heading "Gemini" [level=5] [ref=e82]
+            - paragraph [ref=e83]: Fast & efficient
+            - generic [ref=e84]: ✗ No Key
+            - button "Select" [ref=e85] [cursor=pointer]
+          - generic [ref=e86]:
+            - heading "Claude" [level=5] [ref=e87]
+            - paragraph [ref=e88]: Advanced reasoning
+            - generic [ref=e89]: ✗ No Key
+            - button "Select" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - heading "Perplexity" [level=5] [ref=e92]
+            - paragraph [ref=e93]: Alternative option
+            - generic [ref=e94]: ✗ No Key
+            - button "Select" [ref=e95] [cursor=pointer]
+      - generic [ref=e96]:
+        - heading "🖥️ System Status" [level=4] [ref=e97]
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: "Theme:"
+            - generic [ref=e101]: Light
+          - generic [ref=e102]:
+            - generic [ref=e103]: "Session:"
+            - generic [ref=e104]: Active
+      - generic [ref=e105]:
+        - heading "ℹ️ Help & Information" [level=4] [ref=e106]
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - strong [ref=e109]: Gemini Models
+            - paragraph [ref=e110]: 2.0 Flash is fastest, 1.5 Pro is most capable
+          - generic [ref=e111]:
+            - strong [ref=e112]: Claude
+            - paragraph [ref=e113]: Advanced reasoning and analysis capabilities
+          - generic [ref=e114]:
+            - strong [ref=e115]: Perplexity
+            - paragraph [ref=e116]: Alternative option, good for fallback
+          - generic [ref=e117]:
+            - strong [ref=e118]: API Keys
+            - paragraph [ref=e119]: Stored securely in session, never logged
+    - text: ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅
 ```

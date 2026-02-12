@@ -1,0 +1,472 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - heading "📊 Log Triage" [level=1] [ref=e5]
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "Dashboard" [ref=e8]:
+          - /url: "#"
+      - listitem [ref=e9]:
+        - link "Logs" [ref=e10]:
+          - /url: "#"
+      - listitem [ref=e11]:
+        - link "Tickets" [ref=e12]:
+          - /url: "#"
+      - listitem [ref=e13]:
+        - link "Run Triage" [ref=e14]:
+          - /url: "#"
+      - listitem [ref=e15]:
+        - link "Settings" [ref=e16]:
+          - /url: "#"
+      - listitem [ref=e17]:
+        - link "Help & Guide" [ref=e18]:
+          - /url: "#"
+      - listitem [ref=e19]:
+        - link "About" [ref=e20]:
+          - /url: "#"
+    - button "🌙" [ref=e22]
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Dashboard" [level=2] [ref=e25]
+      - generic [ref=e26]: Ready
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - heading "Total Logs Processed" [level=3] [ref=e30]
+          - paragraph [ref=e31]: "0"
+        - generic [ref=e32]:
+          - heading "Open Tickets" [level=3] [ref=e33]
+          - paragraph [ref=e34]: "0"
+        - generic [ref=e35]:
+          - heading "Critical Issues" [level=3] [ref=e36]
+          - paragraph [ref=e37]: "0"
+        - generic [ref=e38]:
+          - heading "Last Updated" [level=3] [ref=e39]
+          - paragraph [ref=e40]: Never
+      - generic [ref=e41]:
+        - heading "Quick Actions" [level=3] [ref=e42]
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - heading "Run Triage" [level=4] [ref=e45]
+            - paragraph [ref=e46]: Analyze logs and generate tickets
+            - button "Go to Triage" [ref=e47]
+          - generic [ref=e48]:
+            - heading "View Logs" [level=4] [ref=e49]
+            - paragraph [ref=e50]: Browse and filter production logs
+            - button "Go to Logs" [ref=e51]
+          - generic [ref=e52]:
+            - heading "Manage Tickets" [level=4] [ref=e53]
+            - paragraph [ref=e54]: Create and update support tickets
+            - button "Go to Tickets" [ref=e55]
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - button "▼ Filters" [ref=e58]
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - text: Service
+            - combobox [ref=e61]:
+              - option "All Services" [selected]
+          - generic [ref=e62]:
+            - text: Level
+            - combobox [ref=e63]:
+              - option "All Levels" [selected]
+              - option "ERROR"
+              - option "WARN"
+              - option "INFO"
+          - generic [ref=e64]:
+            - text: Keyword
+            - textbox "Search logs..." [ref=e65]
+          - generic [ref=e66]:
+            - text: Log Set
+            - combobox [ref=e67]:
+              - option "Set 1" [selected]
+              - option "Set 2"
+              - option "Set 3"
+              - option "Set 4"
+              - option "Set 5"
+          - button "Clear Filters" [ref=e68]
+      - table [ref=e70]:
+        - rowgroup [ref=e71]:
+          - row "Time Service Level Message" [ref=e72]:
+            - columnheader "Time" [ref=e73]
+            - columnheader "Service" [ref=e74]
+            - columnheader "Level" [ref=e75]
+            - columnheader "Message" [ref=e76]
+        - rowgroup [ref=e77]:
+          - row "Loading logs..." [ref=e78]:
+            - cell "Loading logs..." [ref=e79]
+      - generic [ref=e80]:
+        - button "← Previous" [ref=e81]
+        - text: Page 1
+        - button "Next →" [ref=e82]
+    - generic [ref=e83]:
+      - generic [ref=e84]:
+        - heading "Support Tickets" [level=3] [ref=e85]
+        - generic [ref=e86]:
+          - button "+ Create Ticket" [ref=e87]
+          - button "📋 Select" [ref=e88]
+          - button "💾 Export JSON" [ref=e89]
+          - button "🗑️ Delete" [ref=e90]
+      - generic [ref=e91]:
+        - combobox [ref=e92]:
+          - option "All Statuses" [selected]
+          - option "Open"
+          - option "In Progress"
+          - option "Closed"
+        - combobox [ref=e93]:
+          - option "All Severities" [selected]
+          - option "Critical"
+          - option "High"
+          - option "Medium"
+          - option "Low"
+      - paragraph [ref=e95]: Loading tickets...
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - heading "🤖 Log Triage Assistant" [level=3] [ref=e99]
+        - button "🔄 New Chat" [ref=e100]
+      - paragraph [ref=e103]: Welcome to the Log Triage Assistant! Select a log source below and start the investigation.
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - button "📋 Preset Logs" [ref=e106]
+          - button "📤 Upload File" [ref=e107]
+          - button "🔗 Fetch URL" [ref=e108]
+        - combobox "Select which sample log set to analyze (1-5, increasing complexity)" [ref=e110]:
+          - option "Log Set 1 (Healthy System)"
+          - option "Log Set 2 (Warning Pollution)"
+          - option "Log Set 3 (Critical Errors)" [selected]
+          - option "Log Set 4 (Deployment Issue)"
+          - option "Log Set 5 (Deep Investigation)"
+        - generic [ref=e111]:
+          - button "💬 Start Conversation" [ref=e112]
+          - button "▶ Run Auto Triage" [ref=e113]
+    - generic [ref=e115]:
+      - heading "⚙️ Settings & Configuration" [level=3] [ref=e116]
+      - generic [ref=e117]:
+        - heading "🔑 API Keys Management" [level=4] [ref=e118]
+        - paragraph [ref=e119]: Configure your API keys for AI providers. Keys are stored securely in session.
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - text: Gemini API Key
+            - generic [ref=e122]:
+              - textbox "Gemini API Key" [ref=e123]:
+                - /placeholder: AIza...
+              - button "👁" [ref=e124]
+              - button "✕" [ref=e125]
+            - generic [ref=e126]:
+              - text: Get key at
+              - link "aistudio.google.com" [ref=e127]:
+                - /url: https://aistudio.google.com/app/apikey
+          - generic [ref=e128]:
+            - text: Perplexity API Key
+            - generic [ref=e129]:
+              - textbox "Perplexity API Key" [ref=e130]:
+                - /placeholder: pplx-...
+              - button "👁" [ref=e131]
+              - button "✕" [ref=e132]
+            - generic [ref=e133]:
+              - text: Get key at
+              - link "perplexity.ai" [ref=e134]:
+                - /url: https://www.perplexity.ai/settings/api
+          - generic [ref=e135]:
+            - text: Claude (Anthropic) API Key
+            - generic [ref=e136]:
+              - textbox "Claude (Anthropic) API Key" [ref=e137]:
+                - /placeholder: sk-ant-...
+              - button "👁" [ref=e138]
+              - button "✕" [ref=e139]
+            - generic [ref=e140]:
+              - text: Get key at
+              - link "console.anthropic.com" [ref=e141]:
+                - /url: https://console.anthropic.com/api/keys
+          - button "💾 Save API Keys" [ref=e142]
+      - generic [ref=e143]:
+        - heading "🤖 AI Model Selection" [level=4] [ref=e144]
+        - paragraph [ref=e145]: Choose your preferred AI provider and model for log analysis.
+        - generic [ref=e146]:
+          - generic [ref=e147]:
+            - text: AI Provider
+            - combobox "AI Provider" [ref=e148]:
+              - option "Gemini (Google)" [selected]
+              - option "Claude (Anthropic)"
+              - option "Perplexity"
+          - generic [ref=e149]:
+            - text: Model
+            - combobox "Model" [ref=e150]:
+              - option "Gemini 2.0 Flash" [selected]
+              - option "Gemini 1.5 Pro"
+              - option "Gemini 1.5 Flash"
+          - button "✓ Save Model Selection" [ref=e151]
+        - generic [ref=e152]:
+          - generic [ref=e153]: "Current Provider: Loading..."
+          - generic [ref=e154]: "Current Model: Loading..."
+      - generic [ref=e155]:
+        - heading "📊 Provider Status" [level=4] [ref=e156]
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - heading "Gemini" [level=5] [ref=e159]
+            - paragraph [ref=e160]: Fast & efficient
+            - generic [ref=e161]: Checking...
+            - button "Select" [ref=e162]
+          - generic [ref=e163]:
+            - heading "Claude" [level=5] [ref=e164]
+            - paragraph [ref=e165]: Advanced reasoning
+            - generic [ref=e166]: Checking...
+            - button "Select" [ref=e167]
+          - generic [ref=e168]:
+            - heading "Perplexity" [level=5] [ref=e169]
+            - paragraph [ref=e170]: Alternative option
+            - generic [ref=e171]: Checking...
+            - button "Select" [ref=e172]
+      - generic [ref=e173]:
+        - heading "🖥️ System Status" [level=4] [ref=e174]
+        - generic [ref=e175]:
+          - generic [ref=e176]: "Theme: Light"
+          - generic [ref=e177]: "Session: Active"
+      - generic [ref=e178]:
+        - heading "ℹ️ Help & Information" [level=4] [ref=e179]
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - strong [ref=e182]: Gemini Models
+            - paragraph [ref=e183]: 2.0 Flash is fastest, 1.5 Pro is most capable
+          - generic [ref=e184]:
+            - strong [ref=e185]: Claude
+            - paragraph [ref=e186]: Advanced reasoning and analysis capabilities
+          - generic [ref=e187]:
+            - strong [ref=e188]: Perplexity
+            - paragraph [ref=e189]: Alternative option, good for fallback
+          - generic [ref=e190]:
+            - strong [ref=e191]: API Keys
+            - paragraph [ref=e192]: Stored securely in session, never logged
+    - generic [ref=e194]:
+      - heading "📚 Help & Guide" [level=3] [ref=e195]
+      - generic [ref=e196]:
+        - heading "🎯 Getting Started" [level=4] [ref=e197]
+        - paragraph [ref=e198]: The Production Logs Triage application helps you analyze logs, identify issues, and manage support tickets.
+        - list [ref=e199]:
+          - listitem [ref=e200]:
+            - strong [ref=e201]: "View Logs:"
+            - text: Browse production logs from different log sets (1-5) in the Logs section
+          - listitem [ref=e202]:
+            - strong [ref=e203]: "Filter & Search:"
+            - text: Use filters to find specific services, log levels, or keywords
+          - listitem [ref=e204]:
+            - strong [ref=e205]: "Run Triage:"
+            - text: Analyze logs with AI to automatically generate tickets and insights
+          - listitem [ref=e206]:
+            - strong [ref=e207]: "Manage Tickets:"
+            - text: Create, update, and track support tickets
+          - listitem [ref=e208]:
+            - strong [ref=e209]: "Export Data:"
+            - text: Download tickets as JSON for external use
+      - generic [ref=e210]:
+        - heading "📊 Dashboard" [level=4] [ref=e211]
+        - paragraph [ref=e212]: "The dashboard shows a quick overview of your system:"
+        - list [ref=e213]:
+          - listitem [ref=e214]:
+            - strong [ref=e215]: "Total Logs Processed:"
+            - text: Count of all logs analyzed
+          - listitem [ref=e216]:
+            - strong [ref=e217]: "Open Tickets:"
+            - text: Number of unresolved issues
+          - listitem [ref=e218]:
+            - strong [ref=e219]: "Critical Issues:"
+            - text: Count of high-priority tickets
+          - listitem [ref=e220]:
+            - strong [ref=e221]: "Last Updated:"
+            - text: Timestamp of last activity
+      - generic [ref=e222]:
+        - heading "📋 Logs View" [level=4] [ref=e223]
+        - paragraph [ref=e224]: "Browse and filter production logs:"
+        - list [ref=e225]:
+          - listitem [ref=e226]:
+            - strong [ref=e227]: "Log Sets 1-5:"
+            - text: Different production scenarios with increasing complexity
+          - listitem [ref=e228]:
+            - strong [ref=e229]: "Filter by Service:"
+            - text: View logs from specific services
+          - listitem [ref=e230]:
+            - strong [ref=e231]: "Filter by Level:"
+            - text: Show only ERROR, WARN, INFO, or DEBUG messages
+          - listitem [ref=e232]:
+            - strong [ref=e233]: "Keyword Search:"
+            - text: Find specific text in log messages
+          - listitem [ref=e234]:
+            - strong [ref=e235]: "Pagination:"
+            - text: Navigate through large log sets
+      - generic [ref=e236]:
+        - heading "🎫 Tickets" [level=4] [ref=e237]
+        - paragraph [ref=e238]: "Create and manage support tickets:"
+        - list [ref=e239]:
+          - listitem [ref=e240]:
+            - strong [ref=e241]: "Create Manual Tickets:"
+            - text: Add custom tickets with title, description, severity, and affected services
+          - listitem [ref=e242]:
+            - strong [ref=e243]: "View Tickets:"
+            - text: See all tickets with status badges and priority indicators
+          - listitem [ref=e244]:
+            - strong [ref=e245]: "Update Status:"
+            - text: Mark tickets as Open, In Progress, or Closed
+          - listitem [ref=e246]:
+            - strong [ref=e247]: "Add Comments:"
+            - text: Collaborate by adding notes to tickets
+          - listitem [ref=e248]:
+            - strong [ref=e249]: "Bulk Operations:"
+            - text: Select multiple tickets for batch delete or export
+          - listitem [ref=e250]:
+            - strong [ref=e251]: "Export as JSON:"
+            - text: Download selected or all tickets for external use
+      - generic [ref=e252]:
+        - heading "🤖 Run Triage" [level=4] [ref=e253]
+        - paragraph [ref=e254]: "Use AI to automatically analyze logs and generate insights:"
+        - list [ref=e255]:
+          - listitem [ref=e256]:
+            - strong [ref=e257]: "Preset Logs:"
+            - text: Analyze pre-loaded production scenarios (Sets 1-5)
+          - listitem [ref=e258]:
+            - strong [ref=e259]: "File Upload:"
+            - text: Import logs from your machine (.log, .txt, .json, .csv)
+          - listitem [ref=e260]:
+            - strong [ref=e261]: "URL Fetch:"
+            - text: Load logs from a remote URL (HTTP/HTTPS)
+          - listitem [ref=e262]:
+            - strong [ref=e263]: "AI Analysis:"
+            - text: Get automatic ticket generation and root cause suggestions
+          - listitem [ref=e264]:
+            - strong [ref=e265]: "Chat Interface:"
+            - text: See the AI's thinking process in real-time
+      - generic [ref=e266]:
+        - heading "⚙️ Settings" [level=4] [ref=e267]
+        - paragraph [ref=e268]: "Configure your environment:"
+        - list [ref=e269]:
+          - listitem [ref=e270]:
+            - strong [ref=e271]: "API Keys:"
+            - text: Store secure API keys for AI providers (Gemini, Claude, Perplexity)
+          - listitem [ref=e272]:
+            - strong [ref=e273]: "Model Selection:"
+            - text: Choose preferred AI provider and model
+          - listitem [ref=e274]:
+            - strong [ref=e275]: "Provider Status:"
+            - text: Check availability and switch between providers
+          - listitem [ref=e276]:
+            - strong [ref=e277]: "Theme Toggle:"
+            - text: Switch between light and dark modes
+      - generic [ref=e278]:
+        - heading "💡 Tips & Best Practices" [level=4] [ref=e279]
+        - list [ref=e280]:
+          - listitem [ref=e281]: Use filters to focus on specific services or error levels
+          - listitem [ref=e282]: Run triage on manageable log sets for better AI analysis
+          - listitem [ref=e283]: Export tickets regularly for backup and integration with other systems
+          - listitem [ref=e284]: Update ticket statuses to track resolution progress
+          - listitem [ref=e285]: Use appropriate API keys for your region and preferences
+          - listitem [ref=e286]: Check the About page for technology details and support info
+      - generic [ref=e287]:
+        - heading "❓ Frequently Asked Questions" [level=4] [ref=e288]
+        - generic [ref=e289]:
+          - strong [ref=e290]: "Q: Which AI provider should I use?"
+          - paragraph [ref=e291]: "A: Gemini is recommended for speed and reliability. Claude offers advanced reasoning. Perplexity is a good fallback."
+        - generic [ref=e292]:
+          - strong [ref=e293]: "Q: Can I import my own logs?"
+          - paragraph [ref=e294]: "A: Yes! Use File Upload for local files or URL Fetch to load from a web server."
+        - generic [ref=e295]:
+          - strong [ref=e296]: "Q: Are my API keys secure?"
+          - paragraph [ref=e297]: "A: Keys are stored in browser localStorage and never sent to our servers. Handle with care."
+        - generic [ref=e298]:
+          - strong [ref=e299]: "Q: Can I export my data?"
+          - paragraph [ref=e300]: "A: Yes! Export tickets as JSON from the Tickets page for backup or integration."
+        - generic [ref=e301]:
+          - strong [ref=e302]: "Q: What log levels are supported?"
+          - paragraph [ref=e303]: "A: ERROR, WARN, INFO, and DEBUG. Logs are classified based on severity."
+    - generic [ref=e305]:
+      - heading "ℹ️ About" [level=3] [ref=e306]
+      - generic [ref=e307]:
+        - heading "About This Application" [level=4] [ref=e308]
+        - paragraph [ref=e309]:
+          - strong [ref=e310]: Production Logs Triage Agent
+          - text: is an AI-powered system that automatically investigates production logs, identifies issues, correlates them with system changes, and creates support tickets with developer suggestions.
+        - paragraph [ref=e311]: The application combines advanced log analysis, intelligent search capabilities, and modern AI models to help DevOps and SRE teams quickly diagnose and resolve production issues.
+      - generic [ref=e312]:
+        - heading "🛠️ Technology Stack" [level=4] [ref=e313]
+        - generic [ref=e314]:
+          - generic [ref=e315]:
+            - heading "Frontend" [level=5] [ref=e316]
+            - list [ref=e317]:
+              - listitem [ref=e318]: HTML5 & CSS3 (Responsive Design)
+              - listitem [ref=e319]: Vanilla JavaScript (Modern ES6+)
+              - listitem [ref=e320]: Dark Mode Support
+              - listitem [ref=e321]: Mobile-First UI
+          - generic [ref=e322]:
+            - heading "Backend" [level=5] [ref=e323]
+            - list [ref=e324]:
+              - listitem [ref=e325]: Node.js with TypeScript
+              - listitem [ref=e326]: Express.js Web Framework
+              - listitem [ref=e327]: RESTful API Design
+              - listitem [ref=e328]: File-based JSON Storage
+          - generic [ref=e329]:
+            - heading "AI & Analysis" [level=5] [ref=e330]
+            - list [ref=e331]:
+              - listitem [ref=e332]: Google Gemini API
+              - listitem [ref=e333]: Anthropic Claude API
+              - listitem [ref=e334]: Perplexity AI
+              - listitem [ref=e335]: Advanced Log Analysis
+          - generic [ref=e336]:
+            - heading "Deployment" [level=5] [ref=e337]
+            - list [ref=e338]:
+              - listitem [ref=e339]: Vercel Serverless Platform
+              - listitem [ref=e340]: GitHub Version Control
+              - listitem [ref=e341]: Build Automation
+              - listitem [ref=e342]: ES Modules Support
+      - generic [ref=e343]:
+        - heading "👨‍💻 Developer" [level=4] [ref=e344]
+        - generic [ref=e346]:
+          - heading "Igal Krigel" [level=5] [ref=e347]
+          - paragraph [ref=e348]: Full Stack Developer | DevOps Engineer | AI Integration Specialist
+          - generic [ref=e349]:
+            - generic [ref=e350]:
+              - text: "📧 Email:"
+              - link "ikrigel@gmail.com" [ref=e351]:
+                - /url: mailto:ikrigel@gmail.com
+            - generic [ref=e352]:
+              - text: "📱 Phone:"
+              - link "054-6730401" [ref=e353]:
+                - /url: tel:+972546730401
+            - generic [ref=e354]:
+              - text: "💼 LinkedIn:"
+              - link "linkedin.com/in/ikrigel" [ref=e355]:
+                - /url: https://www.linkedin.com/in/ikrigel/
+            - generic [ref=e356]:
+              - text: "🐙 GitHub:"
+              - link "github.com/ikrigel" [ref=e357]:
+                - /url: https://github.com/ikrigel
+      - generic [ref=e358]:
+        - heading "📝 Features" [level=4] [ref=e359]
+        - list [ref=e360]:
+          - listitem [ref=e361]: ✅ AI-powered log analysis with multiple model support
+          - listitem [ref=e362]: ✅ Advanced filtering and search capabilities
+          - listitem [ref=e363]: ✅ Automatic ticket generation from log insights
+          - listitem [ref=e364]: ✅ File upload and URL-based log ingestion
+          - listitem [ref=e365]: ✅ Bulk ticket operations (delete, export)
+          - listitem [ref=e366]: ✅ JSON export for data integration
+          - listitem [ref=e367]: ✅ Responsive mobile-friendly design
+          - listitem [ref=e368]: ✅ Dark mode support
+          - listitem [ref=e369]: ✅ Secure API key management
+          - listitem [ref=e370]: ✅ Real-time chat interface for AI interaction
+          - listitem [ref=e371]: ✅ Production-ready serverless deployment
+      - generic [ref=e372]:
+        - heading "📄 License & Credits" [level=4] [ref=e373]
+        - paragraph [ref=e374]: Built with modern web technologies and best practices for production systems.
+        - paragraph [ref=e375]: This application demonstrates integration of multiple AI APIs, advanced filtering systems, and responsive web design patterns suitable for enterprise deployment.
+      - generic [ref=e376]:
+        - heading "🔗 Resources" [level=4] [ref=e377]
+        - list [ref=e378]:
+          - listitem [ref=e379]:
+            - link "Developer's GitHub" [ref=e380]:
+              - /url: https://github.com/ikrigel
+          - listitem [ref=e381]:
+            - link "LinkedIn Profile" [ref=e382]:
+              - /url: https://www.linkedin.com/in/ikrigel/
+          - listitem [ref=e383]:
+            - link "Contact via Email" [ref=e384]:
+              - /url: mailto:ikrigel@gmail.com
+```
