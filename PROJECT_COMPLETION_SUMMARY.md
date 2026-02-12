@@ -206,10 +206,12 @@ Detailed implementation plan with:
 - **Testing**: Vitest
 
 ### Frontend
-- **Type**: Vanilla JavaScript (no framework)
-- **Styling**: CSS with CSS Variables
-- **API Integration**: Fetch API
-- **Theme Support**: Dark/Light mode
+- **Framework**: React 19.2.0 with TypeScript 5.9.3
+- **Build Tool**: Vite 7.3.1 (Lightning-fast bundling)
+- **State Management**: Zustand + TanStack React Query
+- **Styling**: CSS with CSS Variables & dark mode
+- **Components**: 19+ reusable React components
+- **Testing**: Playwright E2E tests (30+ tests)
 
 ### Infrastructure
 - **Storage**: JSON file persistence
