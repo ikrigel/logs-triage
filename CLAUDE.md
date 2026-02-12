@@ -347,17 +347,18 @@ For questions or issues:
 
 ## React Frontend (New!)
 
-The application now includes a modern **React 18 + TypeScript** frontend that has completely replaced the vanilla JavaScript UI.
+The application now includes a modern **React 19.2.0 + TypeScript 5.9** frontend that has completely replaced the vanilla JavaScript UI.
 
 ### Frontend Architecture
 
 **Tech Stack:**
-- React 18.2 for UI components
-- TypeScript 5.9 for type safety
-- Vite for fast development and optimized builds
-- Zustand for UI state management
-- TanStack Query for server state management
-- CSS with custom properties for theming
+- **React 19.2.0** - Latest React with improved hooks and optimizations
+- **React-DOM 19.2.0** - React rendering library
+- **TypeScript 5.9.3** - Type-safe JavaScript with strict mode
+- **Vite 7.3.1** - Lightning-fast build tool and dev server
+- **Zustand 5.0.11** - UI state management
+- **TanStack React Query 5.90.21** - Server state management and caching
+- **CSS with custom properties** - Theming and dark mode support
 
 ### Frontend Directory Structure
 

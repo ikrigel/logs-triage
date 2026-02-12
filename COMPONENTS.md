@@ -1,6 +1,6 @@
 # Component Reference
 
-Comprehensive guide to all React components in the Production Logs Triage Agent.
+Comprehensive guide to all React 19 components in the Production Logs Triage Agent.
 
 ---
 

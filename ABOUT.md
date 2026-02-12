@@ -29,9 +29,12 @@ Instead of manually sifting through hundreds or thousands of log lines, teams ca
 ```
 ┌─────────────────────────────────────┐
 │    User Interface Layer              │
-│  (React + TypeScript + Zustand)     │
-│  - Chat interface                   │
-│  - Dashboard & views                │
+│  (React 19.2 + TypeScript 5.9)      │
+│  (Vite + Zustand + TanStack Query)  │
+│  - Interactive chat interface       │
+│  - Dashboard with metrics           │
+│  - Logs browser & search            │
+│  - Tickets viewer & editor          │
 │  - Settings management              │
 └─────────────────────────────────────┘
               ↓ HTTP/JSON API ↓
@@ -197,12 +200,13 @@ Agent: Investigation complete - 1 critical ticket created
 ## Technology Stack
 
 ### Frontend
-- **React 18.2**: Component-based UI framework
-- **TypeScript 5.9**: Type-safe JavaScript
-- **Vite**: Next-generation build tool (62 kB bundle)
-- **Zustand**: Lightweight state management
-- **TanStack Query**: Server state management
-- **Playwright**: E2E testing
+- **React 19.2.0**: Latest component-based UI framework with new hooks and optimizations
+- **React-DOM 19.2.0**: React rendering library
+- **TypeScript 5.9.3**: Type-safe JavaScript with strict mode
+- **Vite 7.3.1**: Lightning-fast build tool and dev server
+- **Zustand 5.0.11**: Lightweight state management for UI state
+- **TanStack React Query 5.90.21**: Server state management and caching
+- **Playwright 1.40.0**: E2E testing across browsers
 
 ### Backend
 - **Node.js**: JavaScript runtime
@@ -321,12 +325,13 @@ For production deployment:
 ## Performance Metrics
 
 ### Bundle Size
-- **Frontend**: 79.8 kB gzipped (well under 100 kB target)
+- **Frontend**: ~80 kB gzipped (well under 100 kB target with React 19)
 - **Breakdown**:
-  - React + ReactDOM: 42 kB
-  - TanStack Query: 15 kB
-  - UI components: 12 kB
-  - Other libraries: 10.8 kB
+  - React 19.2.0 + ReactDOM: ~43 kB
+  - TanStack Query 5.90: ~15 kB
+  - UI components + views: ~12 kB
+  - Zustand + utilities: ~10 kB
+- Built with Vite's tree-shaking and code splitting optimizations
 
 ### Load Time
 - **Initial**: < 2 seconds on 3G
