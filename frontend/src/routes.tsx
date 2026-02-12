@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
+import { TriageView } from './components/Views/TriageView';
 
-// Placeholder views - to be implemented in Phase 2-3
+// Placeholder views - to be implemented in Phase 3
 const DashboardView = () => <div className="view-placeholder">📊 Dashboard - Coming Soon</div>;
-const TriageView = () => <div className="view-placeholder">🔍 Triage - Coming Soon</div>;
 const LogsView = () => <div className="view-placeholder">📝 Logs - Coming Soon</div>;
 const TicketsView = () => <div className="view-placeholder">🎫 Tickets - Coming Soon</div>;
 const SettingsView = () => <div className="view-placeholder">⚙️ Settings - Coming Soon</div>;
@@ -13,7 +13,7 @@ export type ViewComponent = {
 
 export const views: ViewComponent = {
   dashboard: DashboardView,
-  triage: TriageView,
+  triage: () => <TriageView />,
   logs: LogsView,
   tickets: TicketsView,
   settings: SettingsView,
