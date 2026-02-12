@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Layout } from './components/Layout/Layout';
+import { ErrorBoundary } from './components/Common/ErrorBoundary';
 import { useUIStore } from './store/uiStore';
 import { renderView } from './routes';
 import './App.css';
@@ -30,11 +31,13 @@ function App() {
   }, []);
 
   return (
-    <Layout>
-      <div className="view-container">
-        {renderView(currentView)}
-      </div>
-    </Layout>
+    <ErrorBoundary>
+      <Layout>
+        <div className="view-container">
+          {renderView(currentView)}
+        </div>
+      </Layout>
+    </ErrorBoundary>
   );
 }
 

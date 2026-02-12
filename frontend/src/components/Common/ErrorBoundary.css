@@ -1,0 +1,126 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: var(--spacing-lg);
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-2xl);
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 4rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.error-content h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #ef4444;
+}
+
+.error-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.error-details {
+  width: 100%;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-md) 0;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #374151;
+  user-select: none;
+}
+
+.error-details pre {
+  margin: var(--spacing-md) 0 0 0;
+  padding: var(--spacing-md);
+  background-color: white;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  font-size: 0.75rem;
+  color: #1f2937;
+}
+
+.reset-button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  min-height: 44px;
+  min-width: 150px;
+}
+
+.reset-button:hover {
+  background-color: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .error-boundary {
+    min-height: 100vh;
+  }
+
+  .error-content {
+    padding: var(--spacing-lg);
+  }
+
+  .error-icon {
+    font-size: 3rem;
+  }
+
+  .error-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .reset-button {
+    width: 100%;
+  }
+}

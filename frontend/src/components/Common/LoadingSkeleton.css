@@ -1,0 +1,131 @@
+.loading-skeleton {
+  display: block;
+}
+
+.loading-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.loading-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Base skeleton element */
+.skeleton-card,
+.skeleton-text,
+.skeleton-line,
+.skeleton-circle,
+.skeleton-metric {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Card skeleton */
+.skeleton-card {
+  padding: var(--spacing-lg);
+  gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-header {
+  height: 60px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.skeleton-line {
+  height: 16px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* Text skeleton */
+.skeleton-text {
+  height: 20px;
+  display: inline-block;
+}
+
+/* Circle skeleton */
+.skeleton-circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+/* Metric skeleton */
+.skeleton-metric {
+  padding: var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.skeleton-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.skeleton-metric .skeleton-body {
+  flex: 1;
+}
+
+.skeleton-metric .skeleton-line {
+  height: 24px;
+}
+
+.skeleton-metric .skeleton-line:last-child {
+  height: 14px;
+}
+
+/* Dark mode support */
+body.dark-mode .loading-skeleton {
+  --bg-secondary: #374151;
+  --bg-tertiary: #4b5563;
+}
+
+/* Accessibility: Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-card,
+  .skeleton-text,
+  .skeleton-line,
+  .skeleton-circle,
+  .skeleton-metric {
+    animation: none;
+    background: var(--bg-secondary);
+    opacity: 0.5;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .loading-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}
